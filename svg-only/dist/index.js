@@ -141,9 +141,16 @@ var init_snake2 = __esm({
         x: getHeadX(s),
         y: getHeadY(s)
       }));
-      const snakeParts = Array.from(
-        { length: visualN },
-        (_, i) => headTrail.map((_2, t) => headTrail[Math.max(0, t - i)])
+      const steps = headTrail.length;
+      const revealAt = Array.from({ length: visualN }, (_, i) => {
+        if (i === 0) return 0;
+        const meal = eatenTimes[i - 1];
+        if (meal === void 0) return null;
+        return Math.max(meal, i / steps);
+      });
+      const visibleIndexes = revealAt.map((r, i) => r === null ? -1 : i).filter((i) => i >= 0);
+      const snakeParts = visibleIndexes.map(
+        (i) => headTrail.map((_, t) => headTrail[Math.max(0, t - i)])
       );
       const svgElements = snakeParts.map((_, i, { length }) => {
         const dMin = sizeDot * 0.8;
@@ -176,8 +183,8 @@ var init_snake2 = __esm({
           const keyframes = removeInterpolatedPositions(
             positions.map((tr, i2, { length }) => ({ ...tr, t: i2 / length }))
           ).map(({ t, ...p }) => ({ t, style: transform(p) }));
-          const revealAt = i === 0 ? 0 : eatenTimes[i - 1];
-          const grows = revealAt !== void 0 && revealAt > 0;
+          const reveal = revealAt[i];
+          const grows = reveal > 0;
           if (!grows)
             return [
               createAnimation(animationName, keyframes),
@@ -189,8 +196,8 @@ var init_snake2 = __esm({
           const growName = `g${i}`;
           const growKeyframes = [
             { t: 0, style: "opacity:0" },
-            { t: revealAt, style: "opacity:0" },
-            { t: Math.min(revealAt + 1e-3, 1), style: "opacity:1" },
+            { t: reveal, style: "opacity:0" },
+            { t: Math.min(reveal + 1e-3, 1), style: "opacity:1" },
             { t: 1, style: "opacity:1" }
           ];
           return [

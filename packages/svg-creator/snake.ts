@@ -37,7 +37,28 @@ export const createSnake = (
     y: getHeadY(s),
   }));
 
-  const snakeParts: Point[][] = Array.from({ length: visualN }, (_, i) =>
+  const steps = headTrail.length;
+
+  // Instante em que cada segmento passa a existir.
+  //  - cabeca (i=0): sempre.
+  //  - demais: na i-esima refeicao, MAS nunca antes do passo i. Sem esse piso o
+  //    segmento e revelado enquanto ainda esta parado na posicao inicial, e
+  //    aparece como quadradinho solto longe da cobra.
+  //  - sem refeicao correspondente (a pessoa comeu menos celulas do que o
+  //    comprimento): null = o segmento NAO e desenhado. Antes ele caia no ramo
+  //    "nao cresce" e ficava visivel desde o inicio, que era o bug.
+  const revealAt = Array.from({ length: visualN }, (_, i) => {
+    if (i === 0) return 0;
+    const meal = eatenTimes[i - 1];
+    if (meal === undefined) return null;
+    return Math.max(meal, i / steps);
+  });
+
+  const visibleIndexes = revealAt
+    .map((r, i) => (r === null ? -1 : i))
+    .filter((i) => i >= 0);
+
+  const snakeParts: Point[][] = visibleIndexes.map((i) =>
     headTrail.map((_, t) => headTrail[Math.max(0, t - i)]),
   );
 
@@ -90,12 +111,10 @@ export const createSnake = (
         positions.map((tr, i, { length }) => ({ ...tr, t: i / length })),
       ).map(({ t, ...p }) => ({ t, style: transform(p) }));
 
-      // Crescimento: o segmento i so aparece depois da i-esima refeicao.
-      // A cabeca (i=0) nasce visivel. Se a pessoa comeu menos celulas do que o
-      // comprimento da cobra, os segmentos restantes nao aparecem — a cobra
-      // termina menor, o que e o comportamento honesto.
-      const revealAt = i === 0 ? 0 : eatenTimes[i - 1];
-      const grows = revealAt !== undefined && revealAt > 0;
+      // `revealAt` ja foi calculado acima, com o piso do passo i e com null para
+      // segmento que nunca deve existir — este bloco so decide se ha animacao.
+      const reveal = revealAt[i]!;
+      const grows = reveal > 0;
 
       if (!grows)
         return [
@@ -110,8 +129,8 @@ export const createSnake = (
       // Degrau, nao fade: o segmento surge junto com a mordida.
       const growKeyframes = [
         { t: 0, style: "opacity:0" },
-        { t: revealAt, style: "opacity:0" },
-        { t: Math.min(revealAt + 0.001, 1), style: "opacity:1" },
+        { t: reveal, style: "opacity:0" },
+        { t: Math.min(reveal + 0.001, 1), style: "opacity:1" },
         { t: 1, style: "opacity:1" },
       ];
 

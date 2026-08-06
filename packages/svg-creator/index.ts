@@ -81,6 +81,15 @@ export const createSvg = (
 
   const livingCells = createLivingCells(grid, chain, cells);
 
+  // Instante normalizado (0..1) de cada celula comida, em ordem. `createSnake`
+  // usa isso para revelar um segmento por refeicao: eatenTimes[k] e quando a
+  // (k+1)-esima celula foi engolida. Reaproveita o `t` que createLivingCells ja
+  // calculou — nao ha segunda varredura da chain.
+  const eatenTimes = livingCells
+    .map((c) => c.t)
+    .filter((t): t is number => t !== null)
+    .sort((a, b) => a - b);
+
   const elements = [
     createGrid(livingCells, drawOptions, duration),
     createStack(
@@ -90,7 +99,7 @@ export const createSvg = (
       (grid.height + 2) * drawOptions.sizeCell,
       duration,
     ),
-    createSnake(chain, drawOptions, duration),
+    createSnake(chain, drawOptions, duration, eatenTimes),
   ];
 
   const viewBox = [

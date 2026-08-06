@@ -1,433 +1,748 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
-/***/ 105:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   FK: () => (/* binding */ isInside),
-/* harmony export */   Im: () => (/* binding */ isEmpty),
-/* harmony export */   Kb: () => (/* binding */ createEmptyGrid),
-/* harmony export */   Yd: () => (/* binding */ isInsideLarge),
-/* harmony export */   l$: () => (/* binding */ setColorEmpty),
-/* harmony export */   mi: () => (/* binding */ copyGrid),
-/* harmony export */   oU: () => (/* binding */ getColor),
-/* harmony export */   wW: () => (/* binding */ setColor)
-/* harmony export */ });
-/* unused harmony exports isGrid, isGridEmpty, gridEquals */
-const isGrid = (x) => !!x &&
-    typeof x?.width === "number" &&
-    typeof x?.height === "number" &&
-    x.data?.length <= x.width * x.height;
-const isInside = (grid, x, y) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
-const isInsideLarge = (grid, m, x, y) => x >= -m && y >= -m && x < grid.width + m && y < grid.height + m;
-const copyGrid = ({ width, height, data }) => ({
-    width,
-    height,
-    data: Uint8Array.from(data),
+// packages/types/grid.ts
+var isInside, isInsideLarge, copyGrid, getIndex, getColor, isEmpty, setColor, setColorEmpty, createEmptyGrid;
+var init_grid = __esm({
+  "packages/types/grid.ts"() {
+    "use strict";
+    isInside = (grid, x, y) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
+    isInsideLarge = (grid, m, x, y) => x >= -m && y >= -m && x < grid.width + m && y < grid.height + m;
+    copyGrid = ({ width, height, data }) => ({
+      width,
+      height,
+      data: Uint8Array.from(data)
+    });
+    getIndex = (grid, x, y) => x * grid.height + y;
+    getColor = (grid, x, y) => grid.data[getIndex(grid, x, y)];
+    isEmpty = (color) => color === 0;
+    setColor = (grid, x, y, color) => {
+      grid.data[getIndex(grid, x, y)] = color || 0;
+    };
+    setColorEmpty = (grid, x, y) => {
+      setColor(grid, x, y, 0);
+    };
+    createEmptyGrid = (width, height) => ({
+      width,
+      height,
+      data: new Uint8Array(width * height)
+    });
+  }
 });
-const getIndex = (grid, x, y) => x * grid.height + y;
-const getColor = (grid, x, y) => grid.data[getIndex(grid, x, y)];
-const isEmpty = (color) => color === 0;
-const setColor = (grid, x, y, color) => {
-    grid.data[getIndex(grid, x, y)] = color || 0;
-};
-const setColorEmpty = (grid, x, y) => {
-    setColor(grid, x, y, 0);
-};
-/**
- * return true if the grid is empty
- */
-const isGridEmpty = (grid) => grid.data.every((x) => x === 0);
-const gridEquals = (a, b) => a.data.every((_, i) => a.data[i] === b.data[i]);
-const createEmptyGrid = (width, height) => ({
-    width,
-    height,
-    data: new Uint8Array(width * height),
-});
 
-
-/***/ }),
-
-/***/ 777:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   Ap: () => (/* binding */ getHeadY),
-/* harmony export */   HU: () => (/* binding */ snakeToCells),
-/* harmony export */   J: () => (/* binding */ snakeWillSelfCollide),
-/* harmony export */   Sc: () => (/* binding */ nextSnake),
-/* harmony export */   T$: () => (/* binding */ getSnakeLength),
-/* harmony export */   sW: () => (/* binding */ snakeEquals),
-/* harmony export */   tN: () => (/* binding */ getHeadX),
-/* harmony export */   yS: () => (/* binding */ createSnakeFromCells)
-/* harmony export */ });
-/* unused harmony export copySnake */
-const getHeadX = (snake) => snake[0] - 2;
-const getHeadY = (snake) => snake[1] - 2;
-const getSnakeLength = (snake) => snake.length / 2;
-const copySnake = (snake) => snake.slice();
-const snakeEquals = (a, b) => {
-    for (let i = 0; i < a.length; i++)
-        if (a[i] !== b[i])
-            return false;
-    return true;
-};
-/**
- * return a copy of the next snake, considering that dx, dy is the direction
- */
-const nextSnake = (snake, dx, dy) => {
-    const copy = new Uint8Array(snake.length);
-    for (let i = 2; i < snake.length; i++)
-        copy[i] = snake[i - 2];
-    copy[0] = snake[0] + dx;
-    copy[1] = snake[1] + dy;
-    return copy;
-};
-/**
- * return true if the next snake will collide with itself
- */
-const snakeWillSelfCollide = (snake, dx, dy) => {
-    const nx = snake[0] + dx;
-    const ny = snake[1] + dy;
-    for (let i = 2; i < snake.length - 2; i += 2)
-        if (snake[i + 0] === nx && snake[i + 1] === ny)
-            return true;
-    return false;
-};
-const snakeToCells = (snake) => Array.from({ length: snake.length / 2 }, (_, i) => ({
-    x: snake[i * 2 + 0] - 2,
-    y: snake[i * 2 + 1] - 2,
-}));
-const createSnakeFromCells = (points) => {
-    const snake = new Uint8Array(points.length * 2);
-    for (let i = points.length; i--;) {
+// packages/types/snake.ts
+var getHeadX, getHeadY, getSnakeLength, snakeEquals, nextSnake, snakeWillSelfCollide, snakeToCells, createSnakeFromCells;
+var init_snake = __esm({
+  "packages/types/snake.ts"() {
+    "use strict";
+    getHeadX = (snake) => snake[0] - 2;
+    getHeadY = (snake) => snake[1] - 2;
+    getSnakeLength = (snake) => snake.length / 2;
+    snakeEquals = (a, b) => {
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+      return true;
+    };
+    nextSnake = (snake, dx, dy) => {
+      const copy = new Uint8Array(snake.length);
+      for (let i = 2; i < snake.length; i++) copy[i] = snake[i - 2];
+      copy[0] = snake[0] + dx;
+      copy[1] = snake[1] + dy;
+      return copy;
+    };
+    snakeWillSelfCollide = (snake, dx, dy) => {
+      const nx = snake[0] + dx;
+      const ny = snake[1] + dy;
+      for (let i = 2; i < snake.length - 2; i += 2)
+        if (snake[i + 0] === nx && snake[i + 1] === ny) return true;
+      return false;
+    };
+    snakeToCells = (snake) => Array.from({ length: snake.length / 2 }, (_, i) => ({
+      x: snake[i * 2 + 0] - 2,
+      y: snake[i * 2 + 1] - 2
+    }));
+    createSnakeFromCells = (points) => {
+      const snake = new Uint8Array(points.length * 2);
+      for (let i = points.length; i--; ) {
         snake[i * 2 + 0] = points[i].x + 2;
         snake[i * 2 + 1] = points[i].y + 2;
-    }
-    return snake;
-};
+      }
+      return snake;
+    };
+  }
+});
 
+// packages/svg-creator/xml-utils.ts
+var h, toAttribute;
+var init_xml_utils = __esm({
+  "packages/svg-creator/xml-utils.ts"() {
+    "use strict";
+    h = (element, attributes) => `<${element} ${toAttribute(attributes)}/>`;
+    toAttribute = (o) => Object.entries(o).filter(([, value]) => value !== null).map(([name, value]) => `${name}="${value}"`).join(" ");
+  }
+});
 
-/***/ }),
+// packages/svg-creator/css-utils.ts
+var percent, mergeKeyFrames, createAnimation, minifyCss;
+var init_css_utils = __esm({
+  "packages/svg-creator/css-utils.ts"() {
+    "use strict";
+    percent = (x) => parseFloat((x * 100).toFixed(2)).toString() + "%";
+    mergeKeyFrames = (keyframes) => {
+      const s = /* @__PURE__ */ new Map();
+      for (const { t, style } of keyframes) {
+        s.set(style, [...s.get(style) ?? [], t]);
+      }
+      return Array.from(s.entries()).map(([style, ts]) => ({ style, ts })).sort((a, b) => a.ts[0] - b.ts[0]);
+    };
+    createAnimation = (name, keyframes) => `@keyframes ${name}{` + mergeKeyFrames(keyframes).map(({ style, ts }) => ts.map(percent).join(",") + `{${style}}`).join("") + "}";
+    minifyCss = (css) => css.replace(/\s+/g, " ").replace(/.\s+[,;:{}()]/g, (a) => a.replace(/\s+/g, "")).replace(/[,;:{}()]\s+./g, (a) => a.replace(/\s+/g, "")).replace(/.\s+[,;:{}()]/g, (a) => a.replace(/\s+/g, "")).replace(/[,;:{}()]\s+./g, (a) => a.replace(/\s+/g, "")).replace(/\;\s*\}/g, "}").trim();
+  }
+});
 
-/***/ 919:
-/***/ ((module) => {
-
-module.exports = require("canvas");
-
-/***/ }),
-
-/***/ 434:
-/***/ ((module) => {
-
-module.exports = require("events");
-
-/***/ }),
-
-/***/ 667:
-/***/ ((module) => {
-
-module.exports = require("gifsicle");
-
-/***/ }),
-
-/***/ 421:
-/***/ ((module) => {
-
-module.exports = require("node:child_process");
-
-/***/ }),
-
-/***/ 24:
-/***/ ((module) => {
-
-module.exports = require("node:fs");
-
-/***/ }),
-
-/***/ 161:
-/***/ ((module) => {
-
-module.exports = require("node:os");
-
-/***/ }),
-
-/***/ 760:
-/***/ ((module) => {
-
-module.exports = require("node:path");
-
-/***/ }),
-
-/***/ 203:
-/***/ ((module) => {
-
-module.exports = require("stream");
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __nccwpck_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __nccwpck_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
-/******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__nccwpck_require__.m = __webpack_modules__;
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/create fake namespace object */
-/******/ 	(() => {
-/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
-/******/ 		var leafPrototypes;
-/******/ 		// create a fake namespace object
-/******/ 		// mode & 1: value is a module id, require it
-/******/ 		// mode & 2: merge all properties of value into the ns
-/******/ 		// mode & 4: return value when already ns object
-/******/ 		// mode & 16: return value when it's Promise-like
-/******/ 		// mode & 8|1: behave like require
-/******/ 		__nccwpck_require__.t = function(value, mode) {
-/******/ 			if(mode & 1) value = this(value);
-/******/ 			if(mode & 8) return value;
-/******/ 			if(typeof value === 'object' && value) {
-/******/ 				if((mode & 4) && value.__esModule) return value;
-/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
-/******/ 			}
-/******/ 			var ns = Object.create(null);
-/******/ 			__nccwpck_require__.r(ns);
-/******/ 			var def = {};
-/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
-/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
-/******/ 			}
-/******/ 			def['default'] = () => (value);
-/******/ 			__nccwpck_require__.d(ns, def);
-/******/ 			return ns;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__nccwpck_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__nccwpck_require__.f).reduce((promises, key) => {
-/******/ 				__nccwpck_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__nccwpck_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".index.js";
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat */
-/******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/ 	
-/******/ 	/* webpack/runtime/require chunk loading */
-/******/ 	(() => {
-/******/ 		// no baseURI
-/******/ 		
-/******/ 		// object to store loaded chunks
-/******/ 		// "1" means "loaded", otherwise not loaded yet
-/******/ 		var installedChunks = {
-/******/ 			792: 1
-/******/ 		};
-/******/ 		
-/******/ 		// no on chunks loaded
-/******/ 		
-/******/ 		var installChunk = (chunk) => {
-/******/ 			var moreModules = chunk.modules, chunkIds = chunk.ids, runtime = chunk.runtime;
-/******/ 			for(var moduleId in moreModules) {
-/******/ 				if(__nccwpck_require__.o(moreModules, moduleId)) {
-/******/ 					__nccwpck_require__.m[moduleId] = moreModules[moduleId];
-/******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__nccwpck_require__);
-/******/ 			for(var i = 0; i < chunkIds.length; i++)
-/******/ 				installedChunks[chunkIds[i]] = 1;
-/******/ 		
-/******/ 		};
-/******/ 		
-/******/ 		// require() chunk loading for javascript
-/******/ 		__nccwpck_require__.f.require = (chunkId, promises) => {
-/******/ 			// "1" is the signal for "already loaded"
-/******/ 			if(!installedChunks[chunkId]) {
-/******/ 				if(true) { // all chunks have JS
-/******/ 					installChunk(require("./" + __nccwpck_require__.u(chunkId)));
-/******/ 				} else installedChunks[chunkId] = 1;
-/******/ 			}
-/******/ 		};
-/******/ 		
-/******/ 		// no external install chunk
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-
-// EXTERNAL MODULE: external "node:fs"
-var external_node_fs_ = __nccwpck_require__(24);
-// EXTERNAL MODULE: external "node:path"
-var external_node_path_ = __nccwpck_require__(760);
-;// CONCATENATED MODULE: ../forgejo-user-contribution/index.ts
-/**
- * Get the contribution grid from a Forgejo/Codeberg user heatmap API.
- *
- * The heatmap endpoint returns raw Unix timestamps (15-minute UTC buckets).
- * Date bucketing uses the caller's local timezone (set TZ env var to control it).
- *
- * Works with any Forgejo instance via the `baseUrl` option.
- * Defaults to Codeberg: https://codeberg.org
- *
- * @example
- *   getForgejoUserContribution("username")
- *   getForgejoUserContribution("username", { baseUrl: "https://codeberg.org" })
- */
-const getForgejoUserContribution = async (userName, o = {}) => {
-    const baseUrl = o.baseUrl ?? "https://codeberg.org";
-    const res = await fetch(`${baseUrl}/api/v1/users/${userName}/heatmap`, {
-        headers: { "Content-Type": "application/json" },
+// packages/svg-creator/snake.ts
+var lerp, createSnake, removeInterpolatedPositions;
+var init_snake2 = __esm({
+  "packages/svg-creator/snake.ts"() {
+    "use strict";
+    init_snake();
+    init_xml_utils();
+    init_css_utils();
+    lerp = (k, a, b) => (1 - k) * a + k * b;
+    createSnake = (chain, { sizeCell, sizeDot }, duration, eatenTimes = [], visualN = 12) => {
+      const headTrail = chain.map((s) => ({
+        x: getHeadX(s),
+        y: getHeadY(s)
+      }));
+      const snakeParts = Array.from(
+        { length: visualN },
+        (_, i) => headTrail.map((_2, t) => headTrail[Math.max(0, t - i)])
+      );
+      const svgElements = snakeParts.map((_, i, { length }) => {
+        const dMin = sizeDot * 0.8;
+        const dMax = sizeCell * 0.9;
+        const iMax = length;
+        const u = (1 - Math.min(i, iMax) / iMax) ** 2;
+        const s = lerp(u, dMin, dMax);
+        const m = (sizeCell - s) / 2;
+        const r = Math.min(4.5, 4 * s / sizeDot);
+        return h("rect", {
+          class: `s s${i}`,
+          x: m.toFixed(1),
+          y: m.toFixed(1),
+          width: s.toFixed(1),
+          height: s.toFixed(1),
+          rx: r.toFixed(1),
+          ry: r.toFixed(1)
+        });
+      });
+      const transform = ({ x, y }) => `transform:translate(${x * sizeCell}px,${y * sizeCell}px)`;
+      const styles = [
+        `.s{ 
+      shape-rendering: geometricPrecision;
+      fill: var(--cs);
+      animation: none linear ${duration}ms infinite
+    }`,
+        ...snakeParts.map((positions, i) => {
+          const id = `s${i}`;
+          const animationName = id;
+          const keyframes = removeInterpolatedPositions(
+            positions.map((tr, i2, { length }) => ({ ...tr, t: i2 / length }))
+          ).map(({ t, ...p }) => ({ t, style: transform(p) }));
+          const revealAt = i === 0 ? 0 : eatenTimes[i - 1];
+          const grows = revealAt !== void 0 && revealAt > 0;
+          if (!grows)
+            return [
+              createAnimation(animationName, keyframes),
+              `.s.${id}{
+            ${transform(positions[0])};
+            animation-name: ${animationName}
+          }`
+            ];
+          const growName = `g${i}`;
+          const growKeyframes = [
+            { t: 0, style: "opacity:0" },
+            { t: revealAt, style: "opacity:0" },
+            { t: Math.min(revealAt + 1e-3, 1), style: "opacity:1" },
+            { t: 1, style: "opacity:1" }
+          ];
+          return [
+            createAnimation(animationName, keyframes),
+            createAnimation(growName, growKeyframes),
+            // Duas animacoes no mesmo rect. A duracao vem do `.s` com um unico
+            // valor, que o CSS repete para os dois nomes — mesma volta, sincronizado.
+            `.s.${id}{
+          ${transform(positions[0])};
+          opacity: 0;
+          animation-name: ${animationName}, ${growName}
+        }`
+          ];
+        })
+      ].flat();
+      return { svgElements, styles };
+    };
+    removeInterpolatedPositions = (arr) => arr.filter((u, i, arr2) => {
+      if (i - 1 < 0 || i + 1 >= arr2.length) return true;
+      const a = arr2[i - 1];
+      const b = arr2[i + 1];
+      const ex = (a.x + b.x) / 2;
+      const ey = (a.y + b.y) / 2;
+      return !(Math.abs(ex - u.x) < 0.01 && Math.abs(ey - u.y) < 0.01);
     });
-    if (!res.ok)
-        throw new Error(await res.text().catch(() => res.statusText));
-    const heatmapData = (await res.json());
-    // Aggregate contributions per local date (YYYY-MM-DD).
-    // Timestamps are 15-min UTC buckets; en-CA locale gives consistent YYYY-MM-DD format.
-    // The timezone is determined by the process TZ env var.
-    const countsByDate = new Map();
-    for (const { timestamp, contributions } of heatmapData) {
-        const date = new Date(timestamp * 1000).toLocaleDateString("en-CA");
-        countsByDate.set(date, (countsByDate.get(date) ?? 0) + contributions);
+  }
+});
+
+// packages/svg-creator/grid.ts
+var createGrid;
+var init_grid2 = __esm({
+  "packages/svg-creator/grid.ts"() {
+    "use strict";
+    init_css_utils();
+    init_xml_utils();
+    createGrid = (cells, { sizeDotBorderRadius, sizeDot, sizeCell }, duration) => {
+      const svgElements = [];
+      const styles = [
+        `.c{
+      shape-rendering: geometricPrecision;
+      fill: var(--ce);
+      stroke-width: 1px;
+      stroke: var(--cb);
+      animation: none ${duration}ms linear infinite;
+      width: ${sizeDot}px;
+      height: ${sizeDot}px;
+    }`
+      ];
+      let i = 0;
+      for (const { x, y, color, t } of cells) {
+        const id = t && "c" + (i++).toString(36);
+        const m = (sizeCell - sizeDot) / 2;
+        if (t !== null && id) {
+          const animationName = id;
+          styles.push(
+            createAnimation(animationName, [
+              { t: t - 1e-4, style: `fill:var(--c${color})` },
+              { t: t + 1e-4, style: `fill:var(--ce)` },
+              { t: 1, style: `fill:var(--ce)` }
+            ]),
+            `.c.${id}{
+          fill: var(--c${color});
+          animation-name: ${animationName}
+        }`
+          );
+        }
+        svgElements.push(
+          h("rect", {
+            class: ["c", id].filter(Boolean).join(" "),
+            x: x * sizeCell + m,
+            y: y * sizeCell + m,
+            rx: sizeDotBorderRadius,
+            ry: sizeDotBorderRadius
+          })
+        );
+      }
+      return { svgElements, styles };
+    };
+  }
+});
+
+// packages/svg-creator/stack.ts
+var createStack;
+var init_stack = __esm({
+  "packages/svg-creator/stack.ts"() {
+    "use strict";
+    init_css_utils();
+    init_xml_utils();
+    createStack = (cells, { sizeDot }, width, y, duration) => {
+      const svgElements = [];
+      const styles = [
+        `.u{ 
+      transform-origin: 0 0;
+      transform: scale(0,1);
+      animation: none linear ${duration}ms infinite;
+    }`
+      ];
+      const stack = cells.slice().filter((a) => a.t !== null).sort((a, b) => a.t - b.t);
+      const blocks = [];
+      stack.forEach(({ color, t }) => {
+        const latest = blocks[blocks.length - 1];
+        if (latest?.color === color) latest.ts.push(t);
+        else blocks.push({ color, ts: [t] });
+      });
+      const m = width / stack.length;
+      let i = 0;
+      let nx = 0;
+      for (const { color, ts } of blocks) {
+        const id = "u" + (i++).toString(36);
+        const animationName = id;
+        const x = (nx * m).toFixed(1);
+        nx += ts.length;
+        svgElements.push(
+          h("rect", {
+            class: `u ${id}`,
+            height: sizeDot,
+            width: (ts.length * m + 0.6).toFixed(1),
+            x,
+            y
+          })
+        );
+        styles.push(
+          createAnimation(
+            animationName,
+            [
+              ...ts.map((t, i2, { length }) => [
+                { scale: i2 / length, t: t - 1e-4 },
+                { scale: (i2 + 1) / length, t: t + 1e-4 }
+              ]).flat(),
+              { scale: 1, t: 1 }
+            ].map(({ scale, t }) => ({
+              t,
+              style: `transform:scale(${scale.toFixed(3)},1)`
+            }))
+          ),
+          `.u.${id} {
+        fill: var(--c${color});
+        animation-name: ${animationName};
+        transform-origin: ${x}px 0
+      }
+      `
+        );
+      }
+      return { svgElements, styles };
+    };
+  }
+});
+
+// packages/svg-creator/index.ts
+var svg_creator_exports = {};
+__export(svg_creator_exports, {
+  createSvg: () => createSvg
+});
+var getCellsFromGrid, createLivingCells, createSvg, optimizeCss, optimizeSvg, generateColorVar;
+var init_svg_creator = __esm({
+  "packages/svg-creator/index.ts"() {
+    "use strict";
+    init_grid();
+    init_snake();
+    init_snake2();
+    init_grid2();
+    init_stack();
+    init_xml_utils();
+    init_css_utils();
+    getCellsFromGrid = ({ width, height }) => Array.from(
+      { length: width },
+      (_, x) => Array.from({ length: height }, (_2, y) => ({ x, y }))
+    ).flat();
+    createLivingCells = (grid0, chain, cells) => {
+      const livingCells = (cells ?? getCellsFromGrid(grid0)).map(({ x, y }) => ({
+        x,
+        y,
+        t: null,
+        color: getColor(grid0, x, y)
+      }));
+      const grid = copyGrid(grid0);
+      for (let i = 0; i < chain.length; i++) {
+        const snake = chain[i];
+        const x = getHeadX(snake);
+        const y = getHeadY(snake);
+        if (isInside(grid, x, y) && !isEmpty(getColor(grid, x, y))) {
+          setColorEmpty(grid, x, y);
+          const cell = livingCells.find((c) => c.x === x && c.y === y);
+          cell.t = i / chain.length;
+        }
+      }
+      return livingCells;
+    };
+    createSvg = (grid, cells, chain, drawOptions, animationOptions) => {
+      const width = (grid.width + 2) * drawOptions.sizeCell;
+      const height = (grid.height + 5) * drawOptions.sizeCell;
+      const duration = animationOptions.stepDurationMs * chain.length;
+      const livingCells = createLivingCells(grid, chain, cells);
+      const eatenTimes = livingCells.map((c) => c.t).filter((t) => t !== null).sort((a, b) => a - b);
+      const elements = [
+        createGrid(livingCells, drawOptions, duration),
+        createStack(
+          livingCells,
+          drawOptions,
+          grid.width * drawOptions.sizeCell,
+          (grid.height + 2) * drawOptions.sizeCell,
+          duration
+        ),
+        createSnake(chain, drawOptions, duration, eatenTimes)
+      ];
+      const viewBox = [
+        -drawOptions.sizeCell,
+        -drawOptions.sizeCell * 2,
+        width,
+        height
+      ].join(" ");
+      const style = generateColorVar(drawOptions) + elements.map((e) => e.styles).flat().join("\n");
+      const svg = [
+        h("svg", {
+          viewBox,
+          width,
+          height,
+          xmlns: "http://www.w3.org/2000/svg"
+        }).replace("/>", ">"),
+        "<desc>",
+        "Generated with https://github.com/Platane/snk",
+        "</desc>",
+        "<style>",
+        optimizeCss(style),
+        "</style>",
+        ...elements.map((e) => e.svgElements).flat(),
+        "</svg>"
+      ].join("");
+      return optimizeSvg(svg);
+    };
+    optimizeCss = (css) => minifyCss(css);
+    optimizeSvg = (svg) => svg;
+    generateColorVar = (drawOptions) => `
+    :root {
+    --cb: ${drawOptions.colorDotBorder};
+    --cs: ${drawOptions.colorSnake};
+    --ce: ${drawOptions.colorEmpty};
+    ${Object.entries(drawOptions.colorDots).map(([i, color]) => `--c${i}:${color};`).join("")}
     }
-    // Match the color index formula used by Forgejo's vue3-calendar-heatmap:
-    // ceil(count / max * 3) + 1, capped at 4 (we use a 0-4 scale vs their 1-5).
-    const max = Math.max(0, ...countsByDate.values());
-    const levelForCount = (count) => count <= 0 || max === 0
-        ? 0
-        : count >= max
-            ? 4
-            : Math.ceil((count / max) * 3);
-    // Build the cell grid covering the last ~365 days, starting on a Sunday.
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    // Find the Sunday at or before (today - 365 days)
-    const start = new Date(today);
-    start.setDate(start.getDate() - 365);
-    start.setDate(start.getDate() - start.getDay()); // rewind to Sunday
-    const cells = [];
-    const cursor = new Date(start);
-    let x = 0;
-    while (cursor <= today) {
-        const y = cursor.getDay(); // 0 = Sunday
-        const date = cursor.toLocaleDateString("en-CA");
-        const count = countsByDate.get(date) ?? 0;
-        cells.push({ x, y, date, count, level: levelForCount(count) });
-        cursor.setDate(cursor.getDate() + 1);
-        if (y === 6)
-            x++; // advance week after Saturday
+    ` + (drawOptions.dark ? `
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --cb: ${drawOptions.dark.colorDotBorder || drawOptions.colorDotBorder};
+        --cs: ${drawOptions.dark.colorSnake || drawOptions.colorSnake};
+        --ce: ${drawOptions.dark.colorEmpty};
+        ${Object.entries(drawOptions.dark.colorDots).map(([i, color]) => `--c${i}:${color};`).join("")}
+      }
     }
-    return cells;
+` : "");
+  }
+});
+
+// packages/draw/pathRoundedRect.ts
+var pathRoundedRect;
+var init_pathRoundedRect = __esm({
+  "packages/draw/pathRoundedRect.ts"() {
+    "use strict";
+    pathRoundedRect = (ctx, width, height, borderRadius) => {
+      ctx.moveTo(borderRadius, 0);
+      ctx.arcTo(width, 0, width, height, borderRadius);
+      ctx.arcTo(width, height, 0, height, borderRadius);
+      ctx.arcTo(0, height, 0, 0, borderRadius);
+      ctx.arcTo(0, 0, width, 0, borderRadius);
+    };
+  }
+});
+
+// packages/draw/drawGrid.ts
+var drawGrid;
+var init_drawGrid = __esm({
+  "packages/draw/drawGrid.ts"() {
+    "use strict";
+    init_grid();
+    init_pathRoundedRect();
+    drawGrid = (ctx, grid, cells, o) => {
+      for (let x = grid.width; x--; )
+        for (let y = grid.height; y--; ) {
+          if (!cells || cells.some((c) => c.x === x && c.y === y)) {
+            const c = getColor(grid, x, y);
+            const color = !c ? o.colorEmpty : o.colorDots[c];
+            ctx.save();
+            ctx.translate(
+              x * o.sizeCell + (o.sizeCell - o.sizeDot) / 2,
+              y * o.sizeCell + (o.sizeCell - o.sizeDot) / 2
+            );
+            ctx.fillStyle = color;
+            ctx.strokeStyle = o.colorDotBorder;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            pathRoundedRect(ctx, o.sizeDot, o.sizeDot, o.sizeDotBorderRadius);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+          }
+        }
+    };
+  }
+});
+
+// packages/draw/drawSnake.ts
+var lerp2, clamp, drawSnakeLerp;
+var init_drawSnake = __esm({
+  "packages/draw/drawSnake.ts"() {
+    "use strict";
+    init_pathRoundedRect();
+    init_snake();
+    lerp2 = (k, a, b) => (1 - k) * a + k * b;
+    clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+    drawSnakeLerp = (ctx, snake0, snake13, k, o) => {
+      const m = 0.8;
+      const n = snake0.length / 2;
+      for (let i = 0; i < n; i++) {
+        const u = (i + 1) * 0.6 * (o.sizeCell / 16);
+        const a = (1 - m) * (i / Math.max(n - 1, 1));
+        const ki = clamp((k - a) / m, 0, 1);
+        const x = lerp2(ki, snake0[i * 2 + 0], snake13[i * 2 + 0]) - 2;
+        const y = lerp2(ki, snake0[i * 2 + 1], snake13[i * 2 + 1]) - 2;
+        ctx.save();
+        ctx.fillStyle = o.colorSnake;
+        ctx.translate(x * o.sizeCell + u, y * o.sizeCell + u);
+        ctx.beginPath();
+        pathRoundedRect(
+          ctx,
+          o.sizeCell - u * 2,
+          o.sizeCell - u * 2,
+          (o.sizeCell - u * 2) * 0.25
+        );
+        ctx.fill();
+        ctx.restore();
+      }
+    };
+  }
+});
+
+// packages/draw/drawWorld.ts
+var drawStack, drawLerpWorld, getCanvasWorldSize;
+var init_drawWorld = __esm({
+  "packages/draw/drawWorld.ts"() {
+    "use strict";
+    init_drawGrid();
+    init_drawSnake();
+    drawStack = (ctx, stack, max, width, o) => {
+      ctx.save();
+      const m = width / max;
+      for (let i = 0; i < stack.length; i++) {
+        ctx.fillStyle = o.colorDots[stack[i]];
+        ctx.fillRect(i * m, 0, m + width * 5e-3, 10);
+      }
+      ctx.restore();
+    };
+    drawLerpWorld = (ctx, grid, cells, snake0, snake13, stack, k, o) => {
+      ctx.save();
+      if (o.colorBackground) {
+        ctx.fillStyle = o.colorBackground;
+        ctx.fillRect(0, 0, 99999, 99999);
+      }
+      ctx.translate(1 * o.sizeCell, 2 * o.sizeCell);
+      drawGrid(ctx, grid, cells, o);
+      drawSnakeLerp(ctx, snake0, snake13, k, o);
+      ctx.translate(0, (grid.height + 2) * o.sizeCell);
+      const max = grid.data.reduce((sum, x) => sum + +!!x, stack.length);
+      drawStack(ctx, stack, max, grid.width * o.sizeCell, o);
+      ctx.restore();
+    };
+    getCanvasWorldSize = (grid, o) => {
+      const width = o.sizeCell * (grid.width + 2);
+      const height = o.sizeCell * (grid.height + 4) + 30;
+      return { width, height };
+    };
+  }
+});
+
+// packages/solver/step.ts
+var step;
+var init_step = __esm({
+  "packages/solver/step.ts"() {
+    "use strict";
+    init_grid();
+    init_snake();
+    step = (grid, stack, snake) => {
+      const x = getHeadX(snake);
+      const y = getHeadY(snake);
+      const color = getColor(grid, x, y);
+      if (isInside(grid, x, y) && !isEmpty(color)) {
+        stack.push(color);
+        setColorEmpty(grid, x, y);
+      }
+    };
+  }
+});
+
+// packages/gif-creator/index.ts
+var gif_creator_exports = {};
+__export(gif_creator_exports, {
+  createGif: () => createGif,
+  withTmpDir: () => withTmpDir
+});
+var import_node_child_process, import_node_fs, import_node_os, import_node_path, createGif, withTmpDir;
+var init_gif_creator = __esm({
+  "packages/gif-creator/index.ts"() {
+    "use strict";
+    import_node_child_process = require("node:child_process");
+    import_node_fs = __toESM(require("node:fs"));
+    import_node_os = require("node:os");
+    import_node_path = __toESM(require("node:path"));
+    init_drawWorld();
+    init_step();
+    init_grid();
+    createGif = async (grid0, cells, chain, drawOptions, animationOptions) => withTmpDir(async (dir) => {
+      const { createCanvas } = await import("canvas");
+      const { default: gifsicle } = await import("gifsicle");
+      const { default: GIFEncoder } = await import("gif-encoder-2");
+      const { width, height } = getCanvasWorldSize(grid0, drawOptions);
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext("2d", {
+        alpha: true
+      });
+      const grid = copyGrid(grid0);
+      const stack = [];
+      const encoder = new GIFEncoder(
+        width,
+        height,
+        "neuquant",
+        true,
+        chain.length * animationOptions.frameByStep
+      );
+      encoder.setRepeat(0);
+      encoder.setDelay(
+        animationOptions.stepDurationMs / animationOptions.frameByStep
+      );
+      encoder.start();
+      for (let i = 0; i < chain.length; i += 1) {
+        const snake0 = chain[i];
+        const snake13 = chain[Math.min(chain.length - 1, i + 1)];
+        step(grid, stack, snake0);
+        for (let k = 0; k < animationOptions.frameByStep; k++) {
+          ctx.clearRect(0, 0, width, height);
+          drawLerpWorld(
+            ctx,
+            grid,
+            cells,
+            snake0,
+            snake13,
+            stack,
+            k / animationOptions.frameByStep,
+            drawOptions
+          );
+          encoder.addFrame(ctx);
+        }
+      }
+      const outFileName = import_node_path.default.join(dir, "out.gif");
+      const optimizedFileName = import_node_path.default.join(dir, "out.optimized.gif");
+      const paletteFileName = import_node_path.default.join(dir, "palette.txt");
+      {
+        const colors = [
+          drawOptions.colorBackground,
+          drawOptions.colorEmpty,
+          drawOptions.colorSnake,
+          drawOptions.colorDotBorder,
+          ...Object.values(drawOptions.colorDots)
+        ].filter(Boolean);
+        const canvas2 = createCanvas(colors.length, 1);
+        const ctx2 = canvas2.getContext("2d");
+        for (let i = colors.length; i--; ) {
+          ctx2.fillStyle = colors[i];
+          ctx2.fillRect(i, 0, 1, 1);
+        }
+        const imgData = ctx2.getImageData(0, 0, colors.length, 1);
+        import_node_fs.default.writeFileSync(
+          paletteFileName,
+          Array.from(
+            { length: colors.length },
+            (_, i) => [
+              imgData.data[i * 4 + 0],
+              imgData.data[i * 4 + 1],
+              imgData.data[i * 4 + 2]
+            ].join(" ")
+          ).join("\n")
+        );
+      }
+      encoder.finish();
+      import_node_fs.default.writeFileSync(outFileName, encoder.out.getData());
+      (0, import_node_child_process.execFileSync)(
+        gifsicle,
+        [
+          //
+          "--optimize=3",
+          "--color-method=diversity",
+          `--use-colormap=${paletteFileName}`,
+          // "--colors=16",
+          outFileName,
+          ["--output", optimizedFileName]
+        ].flat()
+      );
+      return new Uint8Array(import_node_fs.default.readFileSync(optimizedFileName));
+    });
+    withTmpDir = async (handler) => {
+      const dir = import_node_path.default.join((0, import_node_os.tmpdir)(), Math.random().toString(16).slice(2));
+      import_node_fs.default.mkdirSync(dir, { recursive: true });
+      try {
+        return await handler(dir);
+      } finally {
+        import_node_fs.default.rmdirSync(dir, { recursive: true });
+      }
+    };
+  }
+});
+
+// packages/action/index.ts
+var fs2 = __toESM(require("node:fs"));
+var path2 = __toESM(require("node:path"));
+
+// packages/forgejo-user-contribution/index.ts
+var getForgejoUserContribution = async (userName, o = {}) => {
+  const baseUrl = o.baseUrl ?? "https://codeberg.org";
+  const res = await fetch(`${baseUrl}/api/v1/users/${userName}/heatmap`, {
+    headers: { "Content-Type": "application/json" }
+  });
+  if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
+  const heatmapData = await res.json();
+  const countsByDate = /* @__PURE__ */ new Map();
+  for (const { timestamp, contributions } of heatmapData) {
+    const date = new Date(timestamp * 1e3).toLocaleDateString("en-CA");
+    countsByDate.set(date, (countsByDate.get(date) ?? 0) + contributions);
+  }
+  const max = Math.max(0, ...countsByDate.values());
+  const levelForCount = (count) => count <= 0 || max === 0 ? 0 : count >= max ? 4 : Math.ceil(count / max * 3);
+  const today = /* @__PURE__ */ new Date();
+  today.setHours(0, 0, 0, 0);
+  const start = new Date(today);
+  start.setDate(start.getDate() - 365);
+  start.setDate(start.getDate() - start.getDay());
+  const cells = [];
+  const cursor = new Date(start);
+  let x = 0;
+  while (cursor <= today) {
+    const y = cursor.getDay();
+    const date = cursor.toLocaleDateString("en-CA");
+    const count = countsByDate.get(date) ?? 0;
+    cells.push({ x, y, date, count, level: levelForCount(count) });
+    cursor.setDate(cursor.getDate() + 1);
+    if (y === 6) x++;
+  }
+  return cells;
 };
 
-;// CONCATENATED MODULE: ../github-user-contribution/index.ts
-/**
- * get the contribution grid from a github user page
- *
- * use options.from=YYYY-MM-DD options.to=YYYY-MM-DD to get the contribution grid for a specific time range
- * or year=2019 as an alias for from=2019-01-01 to=2019-12-31
- *
- * otherwise return use the time range from today minus one year to today ( as seen in github profile page )
- *
- * @param userName github user name
- * @param options
- *
- * @example
- *  getGithubUserContribution("platane", { from: "2019-01-01", to: "2019-12-31" })
- *  getGithubUserContribution("platane", { year: 2019 })
- *
- */
-const getGithubUserContribution = async (userName, o) => {
-    const query = /* GraphQL */ `
+// packages/github-user-contribution/index.ts
+var getGithubUserContribution = async (userName, o) => {
+  const query = (
+    /* GraphQL */
+    `
     query ($login: String!) {
       user(login: $login) {
         contributionsCollection {
@@ -444,864 +759,689 @@ const getGithubUserContribution = async (userName, o) => {
         }
       }
     }
-  `;
-    const variables = { login: userName };
-    const apiUrl = o.baseUrl
-        ? `${o.baseUrl}/api/graphql`
-        : "https://api.github.com/graphql";
-    const res = await fetch(apiUrl, {
-        headers: {
-            Authorization: `bearer ${o.githubToken}`,
-            "Content-Type": "application/json",
-            "User-Agent": "me@platane.me",
-        },
-        method: "POST",
-        body: JSON.stringify({ variables, query }),
-    });
-    if (!res.ok)
-        throw new Error(await res.text().catch(() => res.statusText));
-    const { data, errors } = (await res.json());
-    if (errors?.[0])
-        throw errors[0];
-    return data.user.contributionsCollection.contributionCalendar.weeks.flatMap(({ contributionDays }, x) => contributionDays.map((d) => ({
-        x,
-        y: d.weekday,
-        date: d.date,
-        count: d.contributionCount,
-        level: (d.contributionLevel === "FOURTH_QUARTILE" && 4) ||
-            (d.contributionLevel === "THIRD_QUARTILE" && 3) ||
-            (d.contributionLevel === "SECOND_QUARTILE" && 2) ||
-            (d.contributionLevel === "FIRST_QUARTILE" && 1) ||
-            0,
-    })));
+  `
+  );
+  const variables = { login: userName };
+  const apiUrl = o.baseUrl ? `${o.baseUrl}/api/graphql` : "https://api.github.com/graphql";
+  const res = await fetch(apiUrl, {
+    headers: {
+      Authorization: `bearer ${o.githubToken}`,
+      "Content-Type": "application/json",
+      "User-Agent": "me@platane.me"
+    },
+    method: "POST",
+    body: JSON.stringify({ variables, query })
+  });
+  if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
+  const { data, errors } = await res.json();
+  if (errors?.[0]) throw errors[0];
+  return data.user.contributionsCollection.contributionCalendar.weeks.flatMap(
+    ({ contributionDays }, x) => contributionDays.map((d) => ({
+      x,
+      y: d.weekday,
+      date: d.date,
+      count: d.contributionCount,
+      level: d.contributionLevel === "FOURTH_QUARTILE" && 4 || d.contributionLevel === "THIRD_QUARTILE" && 3 || d.contributionLevel === "SECOND_QUARTILE" && 2 || d.contributionLevel === "FIRST_QUARTILE" && 1 || 0
+    }))
+  );
 };
 
-;// CONCATENATED MODULE: ../gitlab-user-contribution/index.ts
-/**
- * Get the contribution grid from a GitLab user calendar.
- *
- * Uses the public /users/{username}/calendar.json endpoint, no auth required.
- * Works with any GitLab instance via the `baseUrl` option.
- * Defaults to https://gitlab.com
- *
- * @example
- *   getGitlabUserContribution("username")
- *   getGitlabUserContribution("username", { baseUrl: "https://gitlab.example.com" })
- */
-const getGitlabUserContribution = async (userName, o = {}) => {
-    const baseUrl = o.baseUrl ?? "https://gitlab.com";
-    const res = await fetch(`${baseUrl}/users/${userName}/calendar.json`, {
-        headers: { "Content-Type": "application/json" },
-    });
-    if (!res.ok)
-        throw new Error(await res.text().catch(() => res.statusText));
-    // Response is already bucketed by day: { "YYYY-MM-DD": count }
-    const countsByDate = (await res.json());
-    const max = Math.max(0, ...Object.values(countsByDate));
-    const levelForCount = (count) => count <= 0 || max === 0
-        ? 0
-        : count >= max
-            ? 4
-            : Math.ceil((count / max) * 3);
-    // Build the cell grid covering the last ~365 days, starting on a Sunday.
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    // Find the Sunday at or before (today - 365 days)
-    const start = new Date(today);
-    start.setDate(start.getDate() - 365);
-    start.setDate(start.getDate() - start.getDay()); // rewind to Sunday
-    const cells = [];
-    const cursor = new Date(start);
-    let x = 0;
-    while (cursor <= today) {
-        const y = cursor.getDay(); // 0 = Sunday
-        const date = cursor.toLocaleDateString("en-CA");
-        const count = countsByDate[date] ?? 0;
-        cells.push({ x, y, date, count, level: levelForCount(count) });
-        cursor.setDate(cursor.getDate() + 1);
-        if (y === 6)
-            x++;
-    }
-    return cells;
+// packages/gitlab-user-contribution/index.ts
+var getGitlabUserContribution = async (userName, o = {}) => {
+  const baseUrl = o.baseUrl ?? "https://gitlab.com";
+  const res = await fetch(`${baseUrl}/users/${userName}/calendar.json`, {
+    headers: { "Content-Type": "application/json" }
+  });
+  if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
+  const countsByDate = await res.json();
+  const max = Math.max(0, ...Object.values(countsByDate));
+  const levelForCount = (count) => count <= 0 || max === 0 ? 0 : count >= max ? 4 : Math.ceil(count / max * 3);
+  const today = /* @__PURE__ */ new Date();
+  today.setHours(0, 0, 0, 0);
+  const start = new Date(today);
+  start.setDate(start.getDate() - 365);
+  start.setDate(start.getDate() - start.getDay());
+  const cells = [];
+  const cursor = new Date(start);
+  let x = 0;
+  while (cursor <= today) {
+    const y = cursor.getDay();
+    const date = cursor.toLocaleDateString("en-CA");
+    const count = countsByDate[date] ?? 0;
+    cells.push({ x, y, date, count, level: levelForCount(count) });
+    cursor.setDate(cursor.getDate() + 1);
+    if (y === 6) x++;
+  }
+  return cells;
 };
 
-// EXTERNAL MODULE: ../types/grid.ts
-var types_grid = __nccwpck_require__(105);
-;// CONCATENATED MODULE: ../types/point.ts
-const around4 = [
-    { x: 1, y: 0 },
-    { x: 0, y: -1 },
-    { x: -1, y: 0 },
-    { x: 0, y: 1 },
+// packages/solver/getBestRoute.ts
+init_grid();
+
+// packages/solver/outside.ts
+init_grid();
+
+// packages/types/point.ts
+var around4 = [
+  { x: 1, y: 0 },
+  { x: 0, y: -1 },
+  { x: -1, y: 0 },
+  { x: 0, y: 1 }
 ];
-const pointEquals = (a, b) => a.x === b.x && a.y === b.y;
 
-;// CONCATENATED MODULE: ../solver/outside.ts
-
-
-const createOutside = (grid, color = 0) => {
-    const outside = (0,types_grid/* createEmptyGrid */.Kb)(grid.width, grid.height);
-    for (let x = outside.width; x--;)
-        for (let y = outside.height; y--;)
-            (0,types_grid/* setColor */.wW)(outside, x, y, 1);
-    fillOutside(outside, grid, color);
-    return outside;
+// packages/solver/outside.ts
+var createOutside = (grid, color = 0) => {
+  const outside = createEmptyGrid(grid.width, grid.height);
+  for (let x = outside.width; x--; )
+    for (let y = outside.height; y--; ) setColor(outside, x, y, 1);
+  fillOutside(outside, grid, color);
+  return outside;
 };
-const fillOutside = (outside, grid, color = 0) => {
-    let changed = true;
-    while (changed) {
-        changed = false;
-        for (let x = outside.width; x--;)
-            for (let y = outside.height; y--;)
-                if ((0,types_grid/* getColor */.oU)(grid, x, y) <= color &&
-                    !isOutside(outside, x, y) &&
-                    around4.some((a) => isOutside(outside, x + a.x, y + a.y))) {
-                    changed = true;
-                    (0,types_grid/* setColorEmpty */.l$)(outside, x, y);
-                }
-    }
-    return outside;
-};
-const isOutside = (outside, x, y) => !(0,types_grid/* isInside */.FK)(outside, x, y) || (0,types_grid/* isEmpty */.Im)((0,types_grid/* getColor */.oU)(outside, x, y));
-
-// EXTERNAL MODULE: ../types/snake.ts
-var types_snake = __nccwpck_require__(777);
-;// CONCATENATED MODULE: ../solver/utils/sortPush.ts
-const sortPush = (arr, x, sortFn) => {
-    let a = 0;
-    let b = arr.length;
-    if (arr.length === 0 || sortFn(x, arr[a]) <= 0) {
-        arr.unshift(x);
-        return;
-    }
-    while (b - a > 1) {
-        const e = Math.ceil((a + b) / 2);
-        const s = sortFn(x, arr[e]);
-        if (s === 0)
-            a = b = e;
-        else if (s > 0)
-            a = e;
-        else
-            b = e;
-    }
-    const e = Math.ceil((a + b) / 2);
-    arr.splice(e, 0, x);
-};
-
-;// CONCATENATED MODULE: ../solver/tunnel.ts
-
-
-/**
- * get the sequence of snake to cross the tunnel
- */
-const getTunnelPath = (snake0, tunnel) => {
-    const chain = [];
-    let snake = snake0;
-    for (let i = 1; i < tunnel.length; i++) {
-        const dx = tunnel[i].x - (0,types_snake/* getHeadX */.tN)(snake);
-        const dy = tunnel[i].y - (0,types_snake/* getHeadY */.Ap)(snake);
-        snake = (0,types_snake/* nextSnake */.Sc)(snake, dx, dy);
-        chain.unshift(snake);
-    }
-    return chain;
-};
-/**
- * assuming the grid change and the colors got deleted, update the tunnel
- */
-const updateTunnel = (grid, tunnel, toDelete) => {
-    while (tunnel.length) {
-        const { x, y } = tunnel[0];
-        if (isEmptySafe(grid, x, y) ||
-            toDelete.some((p) => p.x === x && p.y === y)) {
-            tunnel.shift();
+var fillOutside = (outside, grid, color = 0) => {
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (let x = outside.width; x--; )
+      for (let y = outside.height; y--; )
+        if (getColor(grid, x, y) <= color && !isOutside(outside, x, y) && around4.some((a) => isOutside(outside, x + a.x, y + a.y))) {
+          changed = true;
+          setColorEmpty(outside, x, y);
         }
-        else
-            break;
-    }
-    while (tunnel.length) {
-        const { x, y } = tunnel[tunnel.length - 1];
-        if (isEmptySafe(grid, x, y) ||
-            toDelete.some((p) => p.x === x && p.y === y)) {
-            tunnel.pop();
+  }
+  return outside;
+};
+var isOutside = (outside, x, y) => !isInside(outside, x, y) || isEmpty(getColor(outside, x, y));
+
+// packages/solver/clearResidualColoredLayer.ts
+init_grid();
+init_snake();
+
+// packages/solver/getBestTunnel.ts
+init_grid();
+
+// packages/solver/utils/sortPush.ts
+var sortPush = (arr, x, sortFn) => {
+  let a = 0;
+  let b = arr.length;
+  if (arr.length === 0 || sortFn(x, arr[a]) <= 0) {
+    arr.unshift(x);
+    return;
+  }
+  while (b - a > 1) {
+    const e2 = Math.ceil((a + b) / 2);
+    const s = sortFn(x, arr[e2]);
+    if (s === 0) a = b = e2;
+    else if (s > 0) a = e2;
+    else b = e2;
+  }
+  const e = Math.ceil((a + b) / 2);
+  arr.splice(e, 0, x);
+};
+
+// packages/solver/getBestTunnel.ts
+init_snake();
+
+// packages/solver/tunnel.ts
+init_grid();
+init_snake();
+var getTunnelPath = (snake0, tunnel) => {
+  const chain = [];
+  let snake = snake0;
+  for (let i = 1; i < tunnel.length; i++) {
+    const dx = tunnel[i].x - getHeadX(snake);
+    const dy = tunnel[i].y - getHeadY(snake);
+    snake = nextSnake(snake, dx, dy);
+    chain.unshift(snake);
+  }
+  return chain;
+};
+var isEmptySafe = (grid, x, y) => !isInside(grid, x, y) || isEmpty(getColor(grid, x, y));
+var trimTunnelStart = (grid, tunnel) => {
+  while (tunnel.length) {
+    const { x, y } = tunnel[0];
+    if (isEmptySafe(grid, x, y)) tunnel.shift();
+    else break;
+  }
+};
+var trimTunnelEnd = (grid, tunnel) => {
+  while (tunnel.length) {
+    const i = tunnel.length - 1;
+    const { x, y } = tunnel[i];
+    if (isEmptySafe(grid, x, y) || tunnel.findIndex((p) => p.x === x && p.y === y) < i)
+      tunnel.pop();
+    else break;
+  }
+};
+
+// packages/solver/getBestTunnel.ts
+var getColorSafe = (grid, x, y) => isInside(grid, x, y) ? getColor(grid, x, y) : 0;
+var setEmptySafe = (grid, x, y) => {
+  if (isInside(grid, x, y)) setColorEmpty(grid, x, y);
+};
+var unwrap = (m) => !m ? [] : [...unwrap(m.parent), { x: getHeadX(m.snake), y: getHeadY(m.snake) }];
+var getSnakeEscapePath = (grid, outside, snake0, color) => {
+  const openList = [{ snake: snake0, w: 0 }];
+  const closeList = [];
+  while (openList[0]) {
+    const o = openList.shift();
+    const x = getHeadX(o.snake);
+    const y = getHeadY(o.snake);
+    if (isOutside(outside, x, y)) return unwrap(o);
+    for (const a of around4) {
+      const c = getColorSafe(grid, x + a.x, y + a.y);
+      if (c <= color && !snakeWillSelfCollide(o.snake, a.x, a.y)) {
+        const snake = nextSnake(o.snake, a.x, a.y);
+        if (!closeList.some((s0) => snakeEquals(s0, snake))) {
+          const w = o.w + 1 + +(c === color) * 1e3;
+          sortPush(openList, { snake, w, parent: o }, (a2, b) => a2.w - b.w);
+          closeList.push(snake);
         }
-        else
-            break;
+      }
     }
+  }
+  return null;
 };
-const isEmptySafe = (grid, x, y) => !(0,types_grid/* isInside */.FK)(grid, x, y) || (0,types_grid/* isEmpty */.Im)((0,types_grid/* getColor */.oU)(grid, x, y));
-/**
- * remove empty cell from start
- */
-const trimTunnelStart = (grid, tunnel) => {
-    while (tunnel.length) {
-        const { x, y } = tunnel[0];
-        if (isEmptySafe(grid, x, y))
-            tunnel.shift();
-        else
-            break;
-    }
-};
-/**
- * remove empty cell from end
- */
-const trimTunnelEnd = (grid, tunnel) => {
-    while (tunnel.length) {
-        const i = tunnel.length - 1;
-        const { x, y } = tunnel[i];
-        if (isEmptySafe(grid, x, y) ||
-            tunnel.findIndex((p) => p.x === x && p.y === y) < i)
-            tunnel.pop();
-        else
-            break;
-    }
+var getBestTunnel = (grid, outside, x, y, color, snakeN) => {
+  const c = { x, y };
+  const snake0 = createSnakeFromCells(Array.from({ length: snakeN }, () => c));
+  const one = getSnakeEscapePath(grid, outside, snake0, color);
+  if (!one) return null;
+  const snakeICells = one.slice(0, snakeN);
+  while (snakeICells.length < snakeN)
+    snakeICells.push(snakeICells[snakeICells.length - 1]);
+  const snakeI = createSnakeFromCells(snakeICells);
+  const gridI = copyGrid(grid);
+  for (const { x: x2, y: y2 } of one) setEmptySafe(gridI, x2, y2);
+  const two = getSnakeEscapePath(gridI, outside, snakeI, color);
+  if (!two) return null;
+  one.shift();
+  one.reverse();
+  one.push(...two);
+  trimTunnelStart(grid, one);
+  trimTunnelEnd(grid, one);
+  return one;
 };
 
-;// CONCATENATED MODULE: ../solver/getBestTunnel.ts
-
-
-
-
-
-
-const getColorSafe = (grid, x, y) => (0,types_grid/* isInside */.FK)(grid, x, y) ? (0,types_grid/* getColor */.oU)(grid, x, y) : 0;
-const setEmptySafe = (grid, x, y) => {
-    if ((0,types_grid/* isInside */.FK)(grid, x, y))
-        (0,types_grid/* setColorEmpty */.l$)(grid, x, y);
-};
-const unwrap = (m) => !m
-    ? []
-    : [...unwrap(m.parent), { x: (0,types_snake/* getHeadX */.tN)(m.snake), y: (0,types_snake/* getHeadY */.Ap)(m.snake) }];
-/**
- * returns the path to reach the outside which contains the least color cell
- */
-const getSnakeEscapePath = (grid, outside, snake0, color) => {
-    const openList = [{ snake: snake0, w: 0 }];
-    const closeList = [];
-    while (openList[0]) {
-        const o = openList.shift();
-        const x = (0,types_snake/* getHeadX */.tN)(o.snake);
-        const y = (0,types_snake/* getHeadY */.Ap)(o.snake);
-        if (isOutside(outside, x, y))
-            return unwrap(o);
-        for (const a of around4) {
-            const c = getColorSafe(grid, x + a.x, y + a.y);
-            if (c <= color && !(0,types_snake/* snakeWillSelfCollide */.J)(o.snake, a.x, a.y)) {
-                const snake = (0,types_snake/* nextSnake */.Sc)(o.snake, a.x, a.y);
-                if (!closeList.some((s0) => (0,types_snake/* snakeEquals */.sW)(s0, snake))) {
-                    const w = o.w + 1 + +(c === color) * 1000;
-                    sortPush(openList, { snake, w, parent: o }, (a, b) => a.w - b.w);
-                    closeList.push(snake);
-                }
-            }
+// packages/solver/getPathTo.ts
+init_grid();
+init_snake();
+var getPathTo = (grid, snake0, x, y) => {
+  const openList = [{ snake: snake0, w: 0 }];
+  const closeList = [];
+  while (openList.length) {
+    const c = openList.shift();
+    const cx = getHeadX(c.snake);
+    const cy = getHeadY(c.snake);
+    for (let i = 0; i < around4.length; i++) {
+      const { x: dx, y: dy } = around4[i];
+      const nx = cx + dx;
+      const ny = cy + dy;
+      if (nx === x && ny === y) {
+        const path3 = [nextSnake(c.snake, dx, dy)];
+        let e = c;
+        while (e.parent) {
+          path3.push(e.snake);
+          e = e.parent;
         }
-    }
-    return null;
-};
-/**
- * compute the best tunnel to get to the cell and back to the outside ( best = less usage of <color> )
- *
- * notice that it's one of the best tunnels, more with the same score could exist
- */
-const getBestTunnel = (grid, outside, x, y, color, snakeN) => {
-    const c = { x, y };
-    const snake0 = (0,types_snake/* createSnakeFromCells */.yS)(Array.from({ length: snakeN }, () => c));
-    const one = getSnakeEscapePath(grid, outside, snake0, color);
-    if (!one)
-        return null;
-    // get the position of the snake if it was going to leave the x,y cell
-    const snakeICells = one.slice(0, snakeN);
-    while (snakeICells.length < snakeN)
-        snakeICells.push(snakeICells[snakeICells.length - 1]);
-    const snakeI = (0,types_snake/* createSnakeFromCells */.yS)(snakeICells);
-    // remove from the grid the colors that one eat
-    const gridI = (0,types_grid/* copyGrid */.mi)(grid);
-    for (const { x, y } of one)
-        setEmptySafe(gridI, x, y);
-    const two = getSnakeEscapePath(gridI, outside, snakeI, color);
-    if (!two)
-        return null;
-    one.shift();
-    one.reverse();
-    one.push(...two);
-    trimTunnelStart(grid, one);
-    trimTunnelEnd(grid, one);
-    return one;
-};
-
-;// CONCATENATED MODULE: ../solver/getPathTo.ts
-
-
-
-
-/**
- * starting from snake0, get to the cell x,y
- * return the snake chain (reversed)
- */
-const getPathTo = (grid, snake0, x, y) => {
-    const openList = [{ snake: snake0, w: 0 }];
-    const closeList = [];
-    while (openList.length) {
-        const c = openList.shift();
-        const cx = (0,types_snake/* getHeadX */.tN)(c.snake);
-        const cy = (0,types_snake/* getHeadY */.Ap)(c.snake);
-        for (let i = 0; i < around4.length; i++) {
-            const { x: dx, y: dy } = around4[i];
-            const nx = cx + dx;
-            const ny = cy + dy;
-            if (nx === x && ny === y) {
-                // unwrap
-                const path = [(0,types_snake/* nextSnake */.Sc)(c.snake, dx, dy)];
-                let e = c;
-                while (e.parent) {
-                    path.push(e.snake);
-                    e = e.parent;
-                }
-                return path;
-            }
-            if ((0,types_grid/* isInsideLarge */.Yd)(grid, 2, nx, ny) &&
-                !(0,types_snake/* snakeWillSelfCollide */.J)(c.snake, dx, dy) &&
-                (!(0,types_grid/* isInside */.FK)(grid, nx, ny) || (0,types_grid/* isEmpty */.Im)((0,types_grid/* getColor */.oU)(grid, nx, ny)))) {
-                const nsnake = (0,types_snake/* nextSnake */.Sc)(c.snake, dx, dy);
-                if (!closeList.some((s) => (0,types_snake/* snakeEquals */.sW)(nsnake, s))) {
-                    const w = c.w + 1;
-                    const h = Math.abs(nx - x) + Math.abs(ny - y);
-                    const f = w + h;
-                    const o = { snake: nsnake, parent: c, w, h, f };
-                    sortPush(openList, o, (a, b) => a.f - b.f);
-                    closeList.push(nsnake);
-                }
-            }
+        return path3;
+      }
+      if (isInsideLarge(grid, 2, nx, ny) && !snakeWillSelfCollide(c.snake, dx, dy) && (!isInside(grid, nx, ny) || isEmpty(getColor(grid, nx, ny)))) {
+        const nsnake = nextSnake(c.snake, dx, dy);
+        if (!closeList.some((s) => snakeEquals(nsnake, s))) {
+          const w = c.w + 1;
+          const h2 = Math.abs(nx - x) + Math.abs(ny - y);
+          const f = w + h2;
+          const o = { snake: nsnake, parent: c, w, h: h2, f };
+          sortPush(openList, o, (a, b) => a.f - b.f);
+          closeList.push(nsnake);
         }
+      }
     }
+  }
 };
 
-;// CONCATENATED MODULE: ../solver/clearResidualColoredLayer.ts
-
-
-
-
-
-
-const clearResidualColoredLayer = (grid, outside, snake0, color) => {
-    const snakeN = (0,types_snake/* getSnakeLength */.T$)(snake0);
-    const tunnels = getTunnellablePoints(grid, outside, snakeN, color);
-    // sort
-    tunnels.sort((a, b) => b.priority - a.priority);
-    const chain = [snake0];
-    while (tunnels.length) {
-        // get the best next tunnel
-        let t = getNextTunnel(tunnels, chain[0]);
-        // goes to the start of the tunnel
-        chain.unshift(...getPathTo(grid, chain[0], t[0].x, t[0].y));
-        // goes to the end of the tunnel
-        chain.unshift(...getTunnelPath(chain[0], t));
-        // update grid
-        for (const { x, y } of t)
-            clearResidualColoredLayer_setEmptySafe(grid, x, y);
-        // update outside
-        fillOutside(outside, grid);
-        // update tunnels
-        for (let i = tunnels.length; i--;)
-            if ((0,types_grid/* isEmpty */.Im)((0,types_grid/* getColor */.oU)(grid, tunnels[i].x, tunnels[i].y)))
-                tunnels.splice(i, 1);
-            else {
-                const t = tunnels[i];
-                const tunnel = getBestTunnel(grid, outside, t.x, t.y, color, snakeN);
-                if (!tunnel)
-                    tunnels.splice(i, 1);
-                else {
-                    t.tunnel = tunnel;
-                    t.priority = getPriority(grid, color, tunnel);
-                }
-            }
-        // re-sort
-        tunnels.sort((a, b) => b.priority - a.priority);
-    }
-    chain.pop();
-    return chain;
-};
-const getNextTunnel = (ts, snake) => {
-    let minDistance = Infinity;
-    let closestTunnel = null;
-    const x = (0,types_snake/* getHeadX */.tN)(snake);
-    const y = (0,types_snake/* getHeadY */.Ap)(snake);
-    const priority = ts[0].priority;
-    for (let i = 0; ts[i] && ts[i].priority === priority; i++) {
-        const t = ts[i].tunnel;
-        const d = distanceSq(t[0].x, t[0].y, x, y);
-        if (d < minDistance) {
-            minDistance = d;
-            closestTunnel = t;
-        }
-    }
-    return closestTunnel;
-};
-/**
- * get all the tunnels for all the cells accessible
- */
-const getTunnellablePoints = (grid, outside, snakeN, color) => {
-    const points = [];
-    for (let x = grid.width; x--;)
-        for (let y = grid.height; y--;) {
-            const c = (0,types_grid/* getColor */.oU)(grid, x, y);
-            if (!(0,types_grid/* isEmpty */.Im)(c) && c < color) {
-                const tunnel = getBestTunnel(grid, outside, x, y, color, snakeN);
-                if (tunnel) {
-                    const priority = getPriority(grid, color, tunnel);
-                    points.push({ x, y, priority, tunnel });
-                }
-            }
-        }
-    return points;
-};
-/**
- * get the score of the tunnel
- * prioritize tunnel with maximum color smaller than <color> and with minimum <color>
- * with some tweaks
- */
-const getPriority = (grid, color, tunnel) => {
-    let nColor = 0;
-    let nLess = 0;
-    for (let i = 0; i < tunnel.length; i++) {
-        const { x, y } = tunnel[i];
-        const c = clearResidualColoredLayer_getColorSafe(grid, x, y);
-        if (!(0,types_grid/* isEmpty */.Im)(c) && i === tunnel.findIndex((p) => p.x === x && p.y === y)) {
-            if (c === color)
-                nColor += 1;
-            else
-                nLess += color - c;
-        }
-    }
-    if (nColor === 0)
-        return 99999;
-    return nLess / nColor;
-};
-const distanceSq = (ax, ay, bx, by) => (ax - bx) ** 2 + (ay - by) ** 2;
-const clearResidualColoredLayer_getColorSafe = (grid, x, y) => (0,types_grid/* isInside */.FK)(grid, x, y) ? (0,types_grid/* getColor */.oU)(grid, x, y) : 0;
-const clearResidualColoredLayer_setEmptySafe = (grid, x, y) => {
-    if ((0,types_grid/* isInside */.FK)(grid, x, y))
-        (0,types_grid/* setColorEmpty */.l$)(grid, x, y);
-};
-
-;// CONCATENATED MODULE: ../solver/clearCleanColoredLayer.ts
-
-
-
-
-
-const clearCleanColoredLayer = (grid, outside, snake0, color) => {
-    const snakeN = (0,types_snake/* getSnakeLength */.T$)(snake0);
-    const points = clearCleanColoredLayer_getTunnellablePoints(grid, outside, snakeN, color);
-    const chain = [snake0];
-    while (points.length) {
-        const path = getPathToNextPoint(grid, chain[0], color, points);
-        path.pop();
-        for (const snake of path)
-            clearCleanColoredLayer_setEmptySafe(grid, (0,types_snake/* getHeadX */.tN)(snake), (0,types_snake/* getHeadY */.Ap)(snake));
-        chain.unshift(...path);
-    }
+// packages/solver/clearResidualColoredLayer.ts
+var clearResidualColoredLayer = (grid, outside, snake0, color) => {
+  const snakeN = getSnakeLength(snake0);
+  const tunnels = getTunnellablePoints(grid, outside, snakeN, color);
+  tunnels.sort((a, b) => b.priority - a.priority);
+  const chain = [snake0];
+  while (tunnels.length) {
+    let t = getNextTunnel(tunnels, chain[0]);
+    chain.unshift(...getPathTo(grid, chain[0], t[0].x, t[0].y));
+    chain.unshift(...getTunnelPath(chain[0], t));
+    for (const { x, y } of t) setEmptySafe2(grid, x, y);
     fillOutside(outside, grid);
-    chain.pop();
-    return chain;
-};
-const clearCleanColoredLayer_unwrap = (m) => !m ? [] : [m.snake, ...clearCleanColoredLayer_unwrap(m.parent)];
-const getPathToNextPoint = (grid, snake0, color, points) => {
-    const closeList = [];
-    const openList = [{ snake: snake0 }];
-    while (openList.length) {
-        const o = openList.shift();
-        const x = (0,types_snake/* getHeadX */.tN)(o.snake);
-        const y = (0,types_snake/* getHeadY */.Ap)(o.snake);
-        const i = points.findIndex((p) => p.x === x && p.y === y);
-        if (i >= 0) {
-            points.splice(i, 1);
-            return clearCleanColoredLayer_unwrap(o);
+    for (let i = tunnels.length; i--; )
+      if (isEmpty(getColor(grid, tunnels[i].x, tunnels[i].y)))
+        tunnels.splice(i, 1);
+      else {
+        const t2 = tunnels[i];
+        const tunnel = getBestTunnel(grid, outside, t2.x, t2.y, color, snakeN);
+        if (!tunnel) tunnels.splice(i, 1);
+        else {
+          t2.tunnel = tunnel;
+          t2.priority = getPriority(grid, color, tunnel);
         }
-        for (const { x: dx, y: dy } of around4) {
-            if ((0,types_grid/* isInsideLarge */.Yd)(grid, 2, x + dx, y + dy) &&
-                !(0,types_snake/* snakeWillSelfCollide */.J)(o.snake, dx, dy) &&
-                clearCleanColoredLayer_getColorSafe(grid, x + dx, y + dy) <= color) {
-                const snake = (0,types_snake/* nextSnake */.Sc)(o.snake, dx, dy);
-                if (!closeList.some((s0) => (0,types_snake/* snakeEquals */.sW)(s0, snake))) {
-                    closeList.push(snake);
-                    openList.push({ snake, parent: o });
-                }
-            }
+      }
+    tunnels.sort((a, b) => b.priority - a.priority);
+  }
+  chain.pop();
+  return chain;
+};
+var getNextTunnel = (ts, snake) => {
+  let minDistance = Infinity;
+  let closestTunnel = null;
+  const x = getHeadX(snake);
+  const y = getHeadY(snake);
+  const priority = ts[0].priority;
+  for (let i = 0; ts[i] && ts[i].priority === priority; i++) {
+    const t = ts[i].tunnel;
+    const d = distanceSq(t[0].x, t[0].y, x, y);
+    if (d < minDistance) {
+      minDistance = d;
+      closestTunnel = t;
+    }
+  }
+  return closestTunnel;
+};
+var getTunnellablePoints = (grid, outside, snakeN, color) => {
+  const points = [];
+  for (let x = grid.width; x--; )
+    for (let y = grid.height; y--; ) {
+      const c = getColor(grid, x, y);
+      if (!isEmpty(c) && c < color) {
+        const tunnel = getBestTunnel(grid, outside, x, y, color, snakeN);
+        if (tunnel) {
+          const priority = getPriority(grid, color, tunnel);
+          points.push({ x, y, priority, tunnel });
         }
+      }
     }
+  return points;
 };
-/**
- * get all cells that are tunnellable
- */
-const clearCleanColoredLayer_getTunnellablePoints = (grid, outside, snakeN, color) => {
-    const points = [];
-    for (let x = grid.width; x--;)
-        for (let y = grid.height; y--;) {
-            const c = (0,types_grid/* getColor */.oU)(grid, x, y);
-            if (!(0,types_grid/* isEmpty */.Im)(c) &&
-                c <= color &&
-                !points.some((p) => p.x === x && p.y === y)) {
-                const tunnel = getBestTunnel(grid, outside, x, y, color, snakeN);
-                if (tunnel)
-                    for (const p of tunnel)
-                        if (!clearCleanColoredLayer_isEmptySafe(grid, p.x, p.y))
-                            points.push(p);
-            }
+var getPriority = (grid, color, tunnel) => {
+  let nColor = 0;
+  let nLess = 0;
+  for (let i = 0; i < tunnel.length; i++) {
+    const { x, y } = tunnel[i];
+    const c = getColorSafe2(grid, x, y);
+    if (!isEmpty(c) && i === tunnel.findIndex((p) => p.x === x && p.y === y)) {
+      if (c === color) nColor += 1;
+      else nLess += color - c;
+    }
+  }
+  if (nColor === 0) return 99999;
+  return nLess / nColor;
+};
+var distanceSq = (ax, ay, bx, by) => (ax - bx) ** 2 + (ay - by) ** 2;
+var getColorSafe2 = (grid, x, y) => isInside(grid, x, y) ? getColor(grid, x, y) : 0;
+var setEmptySafe2 = (grid, x, y) => {
+  if (isInside(grid, x, y)) setColorEmpty(grid, x, y);
+};
+
+// packages/solver/clearCleanColoredLayer.ts
+init_grid();
+init_snake();
+var clearCleanColoredLayer = (grid, outside, snake0, color) => {
+  const snakeN = getSnakeLength(snake0);
+  const points = getTunnellablePoints2(grid, outside, snakeN, color);
+  const chain = [snake0];
+  while (points.length) {
+    const path3 = getPathToNextPoint(grid, chain[0], color, points);
+    path3.pop();
+    for (const snake of path3)
+      setEmptySafe3(grid, getHeadX(snake), getHeadY(snake));
+    chain.unshift(...path3);
+  }
+  fillOutside(outside, grid);
+  chain.pop();
+  return chain;
+};
+var unwrap2 = (m) => !m ? [] : [m.snake, ...unwrap2(m.parent)];
+var getPathToNextPoint = (grid, snake0, color, points) => {
+  const closeList = [];
+  const openList = [{ snake: snake0 }];
+  while (openList.length) {
+    const o = openList.shift();
+    const x = getHeadX(o.snake);
+    const y = getHeadY(o.snake);
+    const i = points.findIndex((p) => p.x === x && p.y === y);
+    if (i >= 0) {
+      points.splice(i, 1);
+      return unwrap2(o);
+    }
+    for (const { x: dx, y: dy } of around4) {
+      if (isInsideLarge(grid, 2, x + dx, y + dy) && !snakeWillSelfCollide(o.snake, dx, dy) && getColorSafe3(grid, x + dx, y + dy) <= color) {
+        const snake = nextSnake(o.snake, dx, dy);
+        if (!closeList.some((s0) => snakeEquals(s0, snake))) {
+          closeList.push(snake);
+          openList.push({ snake, parent: o });
         }
-    return points;
-};
-const clearCleanColoredLayer_getColorSafe = (grid, x, y) => (0,types_grid/* isInside */.FK)(grid, x, y) ? (0,types_grid/* getColor */.oU)(grid, x, y) : 0;
-const clearCleanColoredLayer_setEmptySafe = (grid, x, y) => {
-    if ((0,types_grid/* isInside */.FK)(grid, x, y))
-        (0,types_grid/* setColorEmpty */.l$)(grid, x, y);
-};
-const clearCleanColoredLayer_isEmptySafe = (grid, x, y) => !(0,types_grid/* isInside */.FK)(grid, x, y) && (0,types_grid/* isEmpty */.Im)((0,types_grid/* getColor */.oU)(grid, x, y));
-
-;// CONCATENATED MODULE: ../solver/getBestRoute.ts
-
-
-
-
-const getBestRoute = (grid0, snake0) => {
-    const grid = (0,types_grid/* copyGrid */.mi)(grid0);
-    const outside = createOutside(grid);
-    const chain = [snake0];
-    for (const color of extractColors(grid)) {
-        if (color > 1)
-            chain.unshift(...clearResidualColoredLayer(grid, outside, chain[0], color));
-        chain.unshift(...clearCleanColoredLayer(grid, outside, chain[0], color));
+      }
     }
-    return chain.reverse();
+  }
 };
-const extractColors = (grid) => {
-    // @ts-ignore
-    let maxColor = Math.max(...grid.data);
-    return Array.from({ length: maxColor }, (_, i) => (i + 1));
-};
-
-;// CONCATENATED MODULE: ../solver/getPathToPose.ts
-
-
-
-
-
-const getPathToPose_isEmptySafe = (grid, x, y) => !(0,types_grid/* isInside */.FK)(grid, x, y) || (0,types_grid/* isEmpty */.Im)((0,types_grid/* getColor */.oU)(grid, x, y));
-const getPathToPose = (snake0, target, grid) => {
-    if ((0,types_snake/* snakeEquals */.sW)(snake0, target))
-        return [];
-    const targetCells = (0,types_snake/* snakeToCells */.HU)(target).reverse();
-    const snakeN = (0,types_snake/* getSnakeLength */.T$)(snake0);
-    const box = {
-        min: {
-            x: Math.min((0,types_snake/* getHeadX */.tN)(snake0), (0,types_snake/* getHeadX */.tN)(target)) - snakeN - 1,
-            y: Math.min((0,types_snake/* getHeadY */.Ap)(snake0), (0,types_snake/* getHeadY */.Ap)(target)) - snakeN - 1,
-        },
-        max: {
-            x: Math.max((0,types_snake/* getHeadX */.tN)(snake0), (0,types_snake/* getHeadX */.tN)(target)) + snakeN + 1,
-            y: Math.max((0,types_snake/* getHeadY */.Ap)(snake0), (0,types_snake/* getHeadY */.Ap)(target)) + snakeN + 1,
-        },
-    };
-    const [t0, ...forbidden] = targetCells;
-    forbidden.slice(0, 3);
-    const openList = [{ snake: snake0, w: 0 }];
-    const closeList = [];
-    while (openList.length) {
-        const o = openList.shift();
-        const x = (0,types_snake/* getHeadX */.tN)(o.snake);
-        const y = (0,types_snake/* getHeadY */.Ap)(o.snake);
-        if (x === t0.x && y === t0.y) {
-            const path = [];
-            let e = o;
-            while (e) {
-                path.push(e.snake);
-                e = e.parent;
-            }
-            path.unshift(...getTunnelPath(path[0], targetCells));
-            path.pop();
-            path.reverse();
-            return path;
+var getTunnellablePoints2 = (grid, outside, snakeN, color) => {
+  const points = [];
+  for (let x = grid.width; x--; )
+    for (let y = grid.height; y--; ) {
+      const c = getColor(grid, x, y);
+      if (!isEmpty(c) && c <= color && !points.some((p) => p.x === x && p.y === y)) {
+        const tunnel = getBestTunnel(grid, outside, x, y, color, snakeN);
+        if (tunnel) {
+          for (const p of tunnel)
+            if (!isEmptySafe2(grid, p.x, p.y)) points.push(p);
         }
-        for (let i = 0; i < around4.length; i++) {
-            const { x: dx, y: dy } = around4[i];
-            const nx = x + dx;
-            const ny = y + dy;
-            if (!(0,types_snake/* snakeWillSelfCollide */.J)(o.snake, dx, dy) &&
-                (!grid || getPathToPose_isEmptySafe(grid, nx, ny)) &&
-                (grid
-                    ? (0,types_grid/* isInsideLarge */.Yd)(grid, 2, nx, ny)
-                    : box.min.x <= nx &&
-                        nx <= box.max.x &&
-                        box.min.y <= ny &&
-                        ny <= box.max.y) &&
-                !forbidden.some((p) => p.x === nx && p.y === ny)) {
-                const snake = (0,types_snake/* nextSnake */.Sc)(o.snake, dx, dy);
-                if (!closeList.some((s) => (0,types_snake/* snakeEquals */.sW)(snake, s))) {
-                    const w = o.w + 1;
-                    const h = Math.abs(nx - x) + Math.abs(ny - y);
-                    const f = w + h;
-                    sortPush(openList, { f, w, snake, parent: o }, (a, b) => a.f - b.f);
-                    closeList.push(snake);
-                }
-            }
+      }
+    }
+  return points;
+};
+var getColorSafe3 = (grid, x, y) => isInside(grid, x, y) ? getColor(grid, x, y) : 0;
+var setEmptySafe3 = (grid, x, y) => {
+  if (isInside(grid, x, y)) setColorEmpty(grid, x, y);
+};
+var isEmptySafe2 = (grid, x, y) => !isInside(grid, x, y) && isEmpty(getColor(grid, x, y));
+
+// packages/solver/getBestRoute.ts
+var getBestRoute = (grid0, snake0) => {
+  const grid = copyGrid(grid0);
+  const outside = createOutside(grid);
+  const chain = [snake0];
+  for (const color of extractColors(grid)) {
+    if (color > 1)
+      chain.unshift(
+        ...clearResidualColoredLayer(grid, outside, chain[0], color)
+      );
+    chain.unshift(...clearCleanColoredLayer(grid, outside, chain[0], color));
+  }
+  return chain.reverse();
+};
+var extractColors = (grid) => {
+  let maxColor = Math.max(...grid.data);
+  return Array.from({ length: maxColor }, (_, i) => i + 1);
+};
+
+// packages/solver/getPathToPose.ts
+init_snake();
+init_grid();
+var isEmptySafe3 = (grid, x, y) => !isInside(grid, x, y) || isEmpty(getColor(grid, x, y));
+var getPathToPose = (snake0, target, grid) => {
+  if (snakeEquals(snake0, target)) return [];
+  const targetCells = snakeToCells(target).reverse();
+  const snakeN = getSnakeLength(snake0);
+  const box = {
+    min: {
+      x: Math.min(getHeadX(snake0), getHeadX(target)) - snakeN - 1,
+      y: Math.min(getHeadY(snake0), getHeadY(target)) - snakeN - 1
+    },
+    max: {
+      x: Math.max(getHeadX(snake0), getHeadX(target)) + snakeN + 1,
+      y: Math.max(getHeadY(snake0), getHeadY(target)) + snakeN + 1
+    }
+  };
+  const [t0, ...forbidden] = targetCells;
+  forbidden.slice(0, 3);
+  const openList = [{ snake: snake0, w: 0 }];
+  const closeList = [];
+  while (openList.length) {
+    const o = openList.shift();
+    const x = getHeadX(o.snake);
+    const y = getHeadY(o.snake);
+    if (x === t0.x && y === t0.y) {
+      const path3 = [];
+      let e = o;
+      while (e) {
+        path3.push(e.snake);
+        e = e.parent;
+      }
+      path3.unshift(...getTunnelPath(path3[0], targetCells));
+      path3.pop();
+      path3.reverse();
+      return path3;
+    }
+    for (let i = 0; i < around4.length; i++) {
+      const { x: dx, y: dy } = around4[i];
+      const nx = x + dx;
+      const ny = y + dy;
+      if (!snakeWillSelfCollide(o.snake, dx, dy) && (!grid || isEmptySafe3(grid, nx, ny)) && (grid ? isInsideLarge(grid, 2, nx, ny) : box.min.x <= nx && nx <= box.max.x && box.min.y <= ny && ny <= box.max.y) && !forbidden.some((p) => p.x === nx && p.y === ny)) {
+        const snake = nextSnake(o.snake, dx, dy);
+        if (!closeList.some((s) => snakeEquals(snake, s))) {
+          const w = o.w + 1;
+          const h2 = Math.abs(nx - x) + Math.abs(ny - y);
+          const f = w + h2;
+          sortPush(openList, { f, w, snake, parent: o }, (a, b) => a.f - b.f);
+          closeList.push(snake);
         }
+      }
     }
+  }
 };
 
-;// CONCATENATED MODULE: ../types/__fixtures__/snake.ts
+// packages/types/__fixtures__/snake.ts
+init_snake();
+var create = (length) => createSnakeFromCells(Array.from({ length }, (_, i) => ({ x: i, y: -1 })));
+var snake1 = create(1);
+var snake3 = create(3);
+var snake4 = create(4);
+var snake5 = create(5);
+var snake9 = create(9);
+var snake12 = create(12);
 
-const create = (length) => (0,types_snake/* createSnakeFromCells */.yS)(Array.from({ length }, (_, i) => ({ x: i, y: -1 })));
-const snake1 = create(1);
-const snake3 = create(3);
-const snake4 = create(4);
-const snake5 = create(5);
-const snake9 = create(9);
-
-;// CONCATENATED MODULE: ../generate-snake-animation/cellsToGrid.ts
-
-const cellsToGrid = (cells) => {
-    const width = Math.max(0, ...cells.map((c) => c.x)) + 1;
-    const height = Math.max(0, ...cells.map((c) => c.y)) + 1;
-    const grid = (0,types_grid/* createEmptyGrid */.Kb)(width, height);
-    for (const c of cells) {
-        if (c.level > 0)
-            (0,types_grid/* setColor */.wW)(grid, c.x, c.y, c.level);
-        else
-            (0,types_grid/* setColorEmpty */.l$)(grid, c.x, c.y);
-    }
-    return grid;
+// packages/generate-snake-animation/cellsToGrid.ts
+init_grid();
+var cellsToGrid = (cells) => {
+  const width = Math.max(0, ...cells.map((c) => c.x)) + 1;
+  const height = Math.max(0, ...cells.map((c) => c.y)) + 1;
+  const grid = createEmptyGrid(width, height);
+  for (const c of cells) {
+    if (c.level > 0) setColor(grid, c.x, c.y, c.level);
+    else setColorEmpty(grid, c.x, c.y);
+  }
+  return grid;
 };
 
-;// CONCATENATED MODULE: ../generate-snake-animation/generateSnakeAnimation.ts
-
-
-
-
-
-
-
-const getUserContribution = async (source) => {
-    switch (source.platform) {
-        case "github":
-            return getGithubUserContribution(source.username, {
-                githubToken: source.githubToken,
-                baseUrl: source.baseUrl,
-            });
-        case "gitlab":
-            return getGitlabUserContribution(source.username, {
-                baseUrl: source.baseUrl,
-            });
-        case "forgejo":
-            return getForgejoUserContribution(source.username, {
-                baseUrl: source.baseUrl,
-            });
-    }
+// packages/generate-snake-animation/palettes.ts
+var basePalettes = {
+  "github-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#1b1f230a",
+    colorDots: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+    colorEmpty: "#ebedf0",
+    colorSnake: "purple"
+  },
+  "github-dark": {
+    colorBackground: "#0c1116",
+    colorDotBorder: "#1b1f230a",
+    colorEmpty: "#161b22",
+    colorDots: ["#161b22", "#01311f", "#034525", "#0f6d31", "#00c647"],
+    colorSnake: "purple"
+  },
+  "forgejo-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#d4d4d8",
+    colorDots: ["#d4d4d8", "#fdba74", "#f97316", "#c2410c", "#7c2d12"],
+    colorSnake: "#7c2d12"
+  },
+  "forgejo-dark": {
+    colorBackground: "#1f2937",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#2b3642",
+    colorDots: ["#2b3642", "#9a3412", "#ea580c", "#fb923c", "#fed7aa"],
+    colorSnake: "#fed7aa"
+  },
+  "codeberg-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#d0d7de",
+    colorDots: ["#d0d7de", "#8db5dc", "#679cd0", "#4183c4", "#254f77"],
+    colorSnake: "#254f77"
+  },
+  "codeberg-dark": {
+    colorBackground: "#161b22",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#3b444a",
+    colorDots: ["#3b444a", "#254f77", "#31699f", "#4183c4", "#8db5dc"],
+    colorSnake: "#8db5dc"
+  },
+  "gitlab-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#edebe6",
+    colorDots: ["#edebe6", "#9dc7f1", "#428fdc", "#2f68b4", "#284779"],
+    colorSnake: "#284779"
+  },
+  "gitlab-dark": {
+    colorBackground: "#1f1e24",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#2a2a36",
+    colorDots: ["#2a2a36", "#284779", "#2f68b4", "#428fdc", "#9dc7f1"],
+    colorSnake: "#9dc7f1"
+  }
 };
-const generateSnakeAnimation = async (source, outputs) => {
-    console.log(`🎣 fetching user contribution from ${source.platform}`);
-    const cells = await getUserContribution(source);
-    const grid = cellsToGrid(cells);
-    const snake = snake4;
-    console.log("📡 computing best route");
-    const chain = getBestRoute(grid, snake);
-    chain.push(...getPathToPose(chain.slice(-1)[0], snake));
-    return Promise.all(outputs.map(async (out, i) => {
-        if (!out)
-            return;
-        const { format, drawOptions, animationOptions } = out;
-        switch (format) {
-            case "svg": {
-                console.log(`🖌 creating svg (outputs[${i}])`);
-                const { createSvg } = await __nccwpck_require__.e(/* import() */ 578).then(__nccwpck_require__.bind(__nccwpck_require__, 578));
-                return createSvg(grid, cells, chain, drawOptions, animationOptions);
-            }
-            case "gif": {
-                console.log(`📹 creating gif (outputs[${i}])`);
-                const { createGif } = await __nccwpck_require__.e(/* import() */ 642).then(__nccwpck_require__.bind(__nccwpck_require__, 642));
-                return createGif(grid, cells, chain, drawOptions, animationOptions);
-            }
+var palettes = {
+  ...basePalettes,
+  // aliases
+  github: basePalettes["github-light"],
+  forgejo: basePalettes["forgejo-light"],
+  codeberg: basePalettes["codeberg-light"],
+  gitlab: basePalettes["gitlab-light"],
+  default: basePalettes["github-light"]
+};
+
+// packages/generate-snake-animation/generateSnakeAnimation.ts
+var getUserContribution = async (source) => {
+  switch (source.platform) {
+    case "github":
+      return getGithubUserContribution(source.username, {
+        githubToken: source.githubToken,
+        baseUrl: source.baseUrl
+      });
+    case "gitlab":
+      return getGitlabUserContribution(source.username, {
+        baseUrl: source.baseUrl
+      });
+    case "forgejo":
+      return getForgejoUserContribution(source.username, {
+        baseUrl: source.baseUrl
+      });
+  }
+};
+var generateSnakeAnimation = async (source, outputs) => {
+  console.log(`\u{1F3A3} fetching user contribution from ${source.platform}`);
+  const cells = await getUserContribution(source);
+  const grid = cellsToGrid(cells);
+  const snake = snake4;
+  console.log("\u{1F4E1} computing best route");
+  const chain = getBestRoute(grid, snake);
+  chain.push(...getPathToPose(chain.slice(-1)[0], snake));
+  return Promise.all(
+    outputs.map(async (out, i) => {
+      if (!out) return;
+      const { format, drawOptions, animationOptions } = out;
+      switch (format) {
+        case "svg": {
+          console.log(`\u{1F58C} creating svg (outputs[${i}])`);
+          const { createSvg: createSvg2 } = await Promise.resolve().then(() => (init_svg_creator(), svg_creator_exports));
+          return createSvg2(grid, cells, chain, drawOptions, animationOptions);
         }
-    }));
-};
-
-;// CONCATENATED MODULE: ../generate-snake-animation/palettes.ts
-const basePalettes = {
-    "github-light": {
-        colorBackground: "#ffffff",
-        colorDotBorder: "#1b1f230a",
-        colorDots: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
-        colorEmpty: "#ebedf0",
-        colorSnake: "purple",
-    },
-    "github-dark": {
-        colorBackground: "#0c1116",
-        colorDotBorder: "#1b1f230a",
-        colorEmpty: "#161b22",
-        colorDots: ["#161b22", "#01311f", "#034525", "#0f6d31", "#00c647"],
-        colorSnake: "purple",
-    },
-    "forgejo-light": {
-        colorBackground: "#ffffff",
-        colorDotBorder: "#00000010",
-        colorEmpty: "#d4d4d8",
-        colorDots: ["#d4d4d8", "#fdba74", "#f97316", "#c2410c", "#7c2d12"],
-        colorSnake: "#7c2d12",
-    },
-    "forgejo-dark": {
-        colorBackground: "#1f2937",
-        colorDotBorder: "#ffffff10",
-        colorEmpty: "#2b3642",
-        colorDots: ["#2b3642", "#9a3412", "#ea580c", "#fb923c", "#fed7aa"],
-        colorSnake: "#fed7aa",
-    },
-    "codeberg-light": {
-        colorBackground: "#ffffff",
-        colorDotBorder: "#00000010",
-        colorEmpty: "#d0d7de",
-        colorDots: ["#d0d7de", "#8db5dc", "#679cd0", "#4183c4", "#254f77"],
-        colorSnake: "#254f77",
-    },
-    "codeberg-dark": {
-        colorBackground: "#161b22",
-        colorDotBorder: "#ffffff10",
-        colorEmpty: "#3b444a",
-        colorDots: ["#3b444a", "#254f77", "#31699f", "#4183c4", "#8db5dc"],
-        colorSnake: "#8db5dc",
-    },
-    "gitlab-light": {
-        colorBackground: "#ffffff",
-        colorDotBorder: "#00000010",
-        colorEmpty: "#edebe6",
-        colorDots: ["#edebe6", "#9dc7f1", "#428fdc", "#2f68b4", "#284779"],
-        colorSnake: "#284779",
-    },
-    "gitlab-dark": {
-        colorBackground: "#1f1e24",
-        colorDotBorder: "#ffffff10",
-        colorEmpty: "#2a2a36",
-        colorDots: ["#2a2a36", "#284779", "#2f68b4", "#428fdc", "#9dc7f1"],
-        colorSnake: "#9dc7f1",
-    },
-};
-// aliases
-const palettes = {
-    ...basePalettes,
-    // aliases
-    github: basePalettes["github-light"],
-    forgejo: basePalettes["forgejo-light"],
-    codeberg: basePalettes["codeberg-light"],
-    gitlab: basePalettes["gitlab-light"],
-    default: basePalettes["github-light"],
-};
-
-;// CONCATENATED MODULE: ../generate-snake-animation/outputsOptions.ts
-
-const parseOutputsOption = (lines) => lines.map(parseEntry);
-const parseEntry = (entry) => {
-    const m = entry.trim().match(/^(.+\.(svg|gif))(\?(.*)|\s*({.*}))?$/);
-    if (!m)
-        return null;
-    const [, filename, format, _, q1, q2] = m;
-    const query = q1 ?? q2;
-    let sp = new URLSearchParams(query || "");
-    try {
-        const o = JSON.parse(query);
-        if (Array.isArray(o.color_dots))
-            o.color_dots = o.color_dots.join(",");
-        sp = new URLSearchParams(o);
-    }
-    catch (err) {
-        if (!(err instanceof SyntaxError))
-            throw err;
-    }
-    const drawOptions = {
-        sizeDotBorderRadius: 2,
-        sizeCell: 16,
-        sizeDot: 12,
-        ...palettes["default"],
-    };
-    const animationOptions = {
-        frameByStep: 1,
-        stepDurationMs: 100,
-    };
-    {
-        const palette = palettes[sp.get("palette")];
-        if (palette) {
-            Object.assign(drawOptions, palette);
+        case "gif": {
+          console.log(`\u{1F4F9} creating gif (outputs[${i}])`);
+          const { createGif: createGif2 } = await Promise.resolve().then(() => (init_gif_creator(), gif_creator_exports));
+          return createGif2(grid, cells, chain, drawOptions, animationOptions);
         }
-    }
-    if (sp.has("color_dots")) {
-        const colors = sp.get("color_dots").split(/[,;]/);
-        drawOptions.colorDots = colors;
-        drawOptions.colorEmpty = colors[0];
-    }
-    if (sp.has("color_snake"))
-        drawOptions.colorSnake = sp.get("color_snake");
-    if (sp.has("color_background"))
-        drawOptions.colorBackground = sp.get("color_background");
-    if (sp.has("color_dot_border"))
-        drawOptions.colorDotBorder = sp.get("color_dot_border");
-    return {
-        filename,
-        format: format,
-        drawOptions,
-        animationOptions,
-    };
+      }
+    })
+  );
 };
 
-// EXTERNAL MODULE: external "node:os"
-var external_node_os_ = __nccwpck_require__(161);
-;// CONCATENATED MODULE: ./github-action.ts
+// packages/generate-snake-animation/outputsOptions.ts
+var parseOutputsOption = (lines) => lines.map(parseEntry);
+var parseEntry = (entry) => {
+  const m = entry.trim().match(/^(.+\.(svg|gif))(\?(.*)|\s*({.*}))?$/);
+  if (!m) return null;
+  const [, filename, format, _, q1, q2] = m;
+  const query = q1 ?? q2;
+  let sp = new URLSearchParams(query || "");
+  try {
+    const o = JSON.parse(query);
+    if (Array.isArray(o.color_dots)) o.color_dots = o.color_dots.join(",");
+    sp = new URLSearchParams(o);
+  } catch (err) {
+    if (!(err instanceof SyntaxError)) throw err;
+  }
+  const drawOptions = {
+    sizeDotBorderRadius: 2,
+    sizeCell: 16,
+    sizeDot: 12,
+    ...palettes["default"]
+  };
+  const animationOptions = {
+    frameByStep: 1,
+    stepDurationMs: 100
+  };
+  {
+    const palette = palettes[sp.get("palette")];
+    if (palette) {
+      Object.assign(drawOptions, palette);
+    }
+  }
+  if (sp.has("color_dots")) {
+    const colors = sp.get("color_dots").split(/[,;]/);
+    drawOptions.colorDots = colors;
+    drawOptions.colorEmpty = colors[0];
+  }
+  if (sp.has("color_snake")) drawOptions.colorSnake = sp.get("color_snake");
+  if (sp.has("color_background"))
+    drawOptions.colorBackground = sp.get("color_background");
+  if (sp.has("color_dot_border"))
+    drawOptions.colorDotBorder = sp.get("color_dot_border");
+  return {
+    filename,
+    format,
+    drawOptions,
+    animationOptions
+  };
+};
 
-/**
- * re-export getInput from "@actions/core" without the bloat
- */
-const getInput = (name) => process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
-/**
- * re-export setFailed from "@actions/core" without the bloat
- */
-const setFailed = (message) => {
-    process.exitCode = 1;
-    process.stdout.write(`::error::${escapeData(message)}::${external_node_os_.EOL}`);
+// packages/action/github-action.ts
+var os = __toESM(require("node:os"));
+var getInput = (name) => process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
+var setFailed = (message) => {
+  process.exitCode = 1;
+  process.stdout.write(`::error::${escapeData(message)}::${os.EOL}`);
 };
 function escapeData(s) {
-    return s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+  return s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
 }
 
-;// CONCATENATED MODULE: ./index.ts
-
-
-
-
-
+// packages/action/index.ts
 (async () => {
-    try {
-        const userName = getInput("github_user_name");
-        const githubToken = process.env.GITHUB_TOKEN ?? getInput("github_token");
-        const outputsRaw = [
-            ...getInput("outputs").split("\n"),
-            //
-            // legacy
-            getInput("gif_out_path"),
-            getInput("svg_out_path"),
-        ]
-            .map((x) => x.trim())
-            .filter(Boolean);
-        const outputs = parseOutputsOption(outputsRaw);
-        const results = await generateSnakeAnimation({ platform: "github", username: userName, githubToken }, outputs);
-        outputs.forEach((out, i) => {
-            const result = results[i];
-            if (out?.filename && result) {
-                console.log(`💾 writing to ${out?.filename}`);
-                external_node_fs_.mkdirSync(external_node_path_.dirname(out?.filename), { recursive: true });
-                external_node_fs_.writeFileSync(out?.filename, result);
-            }
-        });
-    }
-    catch (e) {
-        setFailed(`Action failed with "${e.message}"`);
-    }
+  try {
+    const userName = getInput("github_user_name");
+    const githubToken = process.env.GITHUB_TOKEN ?? getInput("github_token");
+    const outputsRaw = [
+      ...getInput("outputs").split("\n"),
+      //
+      // legacy
+      getInput("gif_out_path"),
+      getInput("svg_out_path")
+    ].map((x) => x.trim()).filter(Boolean);
+    const outputs = parseOutputsOption(outputsRaw);
+    const results = await generateSnakeAnimation(
+      { platform: "github", username: userName, githubToken },
+      outputs
+    );
+    outputs.forEach((out, i) => {
+      const result = results[i];
+      if (out?.filename && result) {
+        console.log(`\u{1F4BE} writing to ${out?.filename}`);
+        fs2.mkdirSync(path2.dirname(out?.filename), { recursive: true });
+        fs2.writeFileSync(out?.filename, result);
+      }
+    });
+  } catch (e) {
+    setFailed(`Action failed with "${e.message}"`);
+  }
 })();
-
-module.exports = __webpack_exports__;
-/******/ })()
-;

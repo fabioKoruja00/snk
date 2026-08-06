@@ -51,6 +51,13 @@ export const generateSnakeAnimation = async (
   console.log(`🎣 fetching user contribution from ${source.platform}`);
   const cells = await getUserContribution(source);
   const grid = cellsToGrid(cells);
+  // Cobra longa: o solver planeja a rota para o comprimento TOTAL desde o
+  // inicio, entao a rota e valida o tempo todo. O crescimento no SVG e apenas
+  // revelacao de segmento (opacity), nunca mudanca de comprimento em execucao —
+  // por isso nao existe risco de auto-colisao.
+  // O SOLVER continua com 4. Medido neste repo: 4 = 11s, 5 = 56s, 6 > 4min.
+  // O custo explode com o comprimento, entao cobra longa nao se resolve aqui.
+  // O comprimento VISUAL e desacoplado e vive no svg-creator.
   const snake = snake4;
 
   console.log("📡 computing best route");
